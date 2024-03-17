@@ -72,6 +72,11 @@ public class UserController {
         List<User> list = userService.selectAll(user);
         return Result.success(list);
     }
+    @GetMapping("/getAllHeaders")
+    public Result getAllHeaders(User user) {
+        List<User> list = userService.getAllHeaders(user);
+        return Result.success(list);
+    }
 
     /**
      * 分页查询

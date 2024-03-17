@@ -2,18 +2,20 @@ package com.example.service;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.example.common.Constants;
+import com.example.common.enums.LevelEnum;
 import com.example.common.enums.ResultCodeEnum;
 import com.example.common.enums.RoleEnum;
 import com.example.entity.Account;
+import com.example.entity.Department;
 import com.example.entity.User;
 import com.example.exception.CustomException;
+import com.example.mapper.DepartmentMapper;
 import com.example.mapper.UserMapper;
 import com.example.utils.TokenUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -27,6 +29,8 @@ public class UserService {
 
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private DepartmentMapper departmentMapper;
 
     /**
      * 新增
@@ -89,6 +93,14 @@ public class UserService {
     public PageInfo<User> selectPage(User user, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<User> list = userMapper.selectAll(user);
+        for (User u : list) {
+            if(ObjectUtil.isNotEmpty(u.getLevel()) && LevelEnum.HEADER.level.equals(u.getLevel())){
+                Department department= departmentMapper.selectByUserId(u.getId());
+                if(ObjectUtil.isNotNull(department)){
+                    u.setDepartmentName(department.getName());
+                }
+            }
+        }
         return PageInfo.of(list);
     }
 
@@ -134,4 +146,8 @@ public class UserService {
         userMapper.updateById(dbUser);
     }
 
+    public List<User> getAllHeaders(User user) {
+        user.setLevel(LevelEnum.HEADER.level);
+        return userMapper.selectAll(user);
+    }
 }
