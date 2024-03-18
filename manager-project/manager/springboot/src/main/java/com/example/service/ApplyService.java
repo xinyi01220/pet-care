@@ -91,6 +91,21 @@ public class ApplyService {
      * 分页查询
      */
     public PageInfo<Apply> selectPage(Apply apply, Integer pageNum, Integer pageSize) {
+        extracted(apply);
+        PageHelper.startPage(pageNum, pageSize);
+        List<Apply> list = applyMapper.selectAll(apply);
+        return PageInfo.of(list);
+    }
+
+    public PageInfo<Apply> selectPage2(Apply apply, Integer pageNum, Integer pageSize) {
+        extracted(apply);
+        apply.setStatus(ApplyEnum.STATUS_PASS.status);
+        PageHelper.startPage(pageNum, pageSize);
+        List<Apply> list = applyMapper.selectAll(apply);
+        return PageInfo.of(list);
+    }
+
+    private void extracted(Apply apply) {
         Account currentUser = TokenUtils.getCurrentUser();
         if (RoleEnum.USER.name().equals(currentUser.getRole())) {
             User user = userMapper.selectById(currentUser.getId());
@@ -101,12 +116,15 @@ public class ApplyService {
                 }
             }
         }
-        PageHelper.startPage(pageNum, pageSize);
-        List<Apply> list = applyMapper.selectAll(apply);
-        return PageInfo.of(list);
     }
 
     public List<Apply> selectByStatus(Integer userId, Integer departmentId) {
         return applyMapper.selectByStatus(userId, departmentId);
+    }
+
+    public List<Apply> selectMyApply(Apply apply) {
+        Account currentUser = TokenUtils.getCurrentUser();
+        apply.setUserId(currentUser.getId());
+        return applyMapper.selectAll(apply);
     }
 }

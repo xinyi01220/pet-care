@@ -2,7 +2,7 @@ package com.example.common.enums;
 
 public enum ApplyEnum {
     PROCESS_HEADER_APPLYING("社长审核中"),
-    PROCESS_HEADER_PASS("审核通过"),
+    PROCESS_HEADER_PASS("审核完成"),
 
     STATUS_APPLYING("待审核"),
     STATUS_PASS("审核通过"),

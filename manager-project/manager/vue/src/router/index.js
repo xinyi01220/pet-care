@@ -26,6 +26,8 @@ const routes = [
       { path: 'user', name: 'User', meta: { name: '学生信息' }, component: () => import('../views/manager/User') },
       { path: 'department', name: 'Department', meta: { name: '社团信息' }, component: () => import('../views/manager/Department') },
       { path: 'apply', name: 'Apply', meta: { name: '申请审批' }, component: () => import('../views/manager/Apply') },
+      { path: 'member', name: 'Member', meta: { name: '社团成员' }, component: () => import('../views/manager/Member') },
+      { path: 'activity', name: 'Activity', meta: { name: '活动' }, component: () => import('../views/manager/Activity') },
     ]
   },
   {
@@ -36,6 +38,7 @@ const routes = [
       { path: 'home', name: 'Home', meta: { name: '系统首页' }, component: () => import('../views/front/Home') },
       { path: 'person', name: 'Person', meta: { name: '个人信息' }, component: () => import('../views/front/Person') },
       { path: 'departmentDetail', name: 'DepartmentDetail', meta: { name: '社团信息' }, component: () => import('../views/front/DepartmentDetail') },
+      { path: 'apply', name: 'Apply', meta: { name: '申请的社团' }, component: () => import('../views/front/Apply') },
     ]
   },
   { path: '/login', name: 'Login', meta: { name: '登录' }, component: () => import('../views/Login.vue') },

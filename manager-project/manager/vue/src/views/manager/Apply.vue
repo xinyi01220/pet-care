@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="search">
-      <el-input placeholder="请输入标题查询" style="width: 200px" v-model="title"></el-input>
+      <el-select v-model="dbStatus" placeholder="请选择审核状态" style="width: 200px">
+        <el-option label="待审核" value="待审核"></el-option>
+        <el-option label="审核通过" value="审核通过"></el-option>
+        <el-option label="审核不通过" value="审核不通过"></el-option>
+      </el-select>
       <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
       <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
     </div>
@@ -9,7 +13,6 @@
 
     <div class="table">
       <el-table :data="tableData" stripe  @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="id" label="序号" width="80" align="center" sortable></el-table-column>
         <el-table-column prop="userName" label="学生姓名" show-overflow-tooltip></el-table-column>
         <el-table-column prop="departmentName" label="所属社团" show-overflow-tooltip></el-table-column>
@@ -19,10 +22,9 @@
         <el-table-column prop="note" label="审核说明"></el-table-column>
 
 
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" width="180" align="center" v-if="user.role === 'USER'">
           <template v-slot="scope">
-            <el-button plain type="primary" @click="handleEdit(scope.row)" size="mini">编辑</el-button>
-            <el-button plain type="danger" size="mini" @click=del(scope.row.id)>删除</el-button>
+            <el-button plain type="primary" :disabled="scope.row.status !== '待审核'" @click="handleEdit(scope.row)" size="mini">审核</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -42,13 +44,17 @@
 
 
 
-    <el-dialog title="信息" :visible.sync="fromVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
+
+    <el-dialog title="审核信息" :visible.sync="fromVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
       <el-form label-width="100px" style="padding-right: 50px" :model="form" :rules="rules" ref="formRef">
-        <el-form-item prop="title" label="标题">
-          <el-input v-model="form.title" autocomplete="off"></el-input>
+        <el-form-item prop="status" label="审核状态">
+          <el-select v-model="status" placeholder="请选择" style="width: 100%">
+            <el-option label="审核通过" value="审核通过"></el-option>
+            <el-option label="审核不通过" value="审核不通过"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item prop="content" label="内容">
-          <el-input type="textarea" :rows="5" v-model="form.content" autocomplete="off"></el-input>
+        <el-form-item prop="note" label="审核说明">
+          <el-input v-model="form.note" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -82,24 +88,24 @@ export default {
           {required: true, message: '请输入内容', trigger: 'blur'},
         ]
       },
-      ids: []
+      ids: [],
+      status:null,
+      dbStatus: null
     }
   },
   created() {
     this.load(1)
   },
   methods: {
-    handleAdd() {   // 新增数据
-      this.form = {}  // 新增数据的时候清空数据
-      this.fromVisible = true   // 打开弹窗
-    },
-    handleEdit(row) {   // 编辑数据
+    handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
       this.fromVisible = true   // 打开弹窗
     },
     save() {   // 保存按钮触发的逻辑  它会触发新增或者更新
       this.$refs.formRef.validate((valid) => {
         if (valid) {
+          this.form.status = this.status
+          this.form.process='审核完成'
           this.$request({
             url: this.form.id ? '/apply/update' : '/apply/add',
             method: this.form.id ? 'PUT' : 'POST',
@@ -116,38 +122,8 @@ export default {
         }
       })
     },
-    del(id) {   // 单个删除
-      this.$confirm('您确定删除吗？', '确认删除', {type: "warning"}).then(response => {
-        this.$request.delete('/apply/delete/' + id).then(res => {
-          if (res.code === '200') {   // 表示操作成功
-            this.$message.success('操作成功')
-            this.load(1)
-          } else {
-            this.$message.error(res.msg)  // 弹出错误的信息
-          }
-        })
-      }).catch(() => {
-      })
-    },
     handleSelectionChange(rows) {   // 当前选中的所有的行数据
       this.ids = rows.map(v => v.id)   //  [1,2]
-    },
-    delBatch() {   // 批量删除
-      if (!this.ids.length) {
-        this.$message.warning('请选择数据')
-        return
-      }
-      this.$confirm('您确定批量删除这些数据吗？', '确认删除', {type: "warning"}).then(response => {
-        this.$request.delete('/apply/delete/batch', {data: this.ids}).then(res => {
-          if (res.code === '200') {   // 表示操作成功
-            this.$message.success('操作成功')
-            this.load(1)
-          } else {
-            this.$message.error(res.msg)  // 弹出错误的信息
-          }
-        })
-      }).catch(() => {
-      })
     },
     load(pageNum) {  // 分页查询
       if (pageNum) this.pageNum = pageNum
@@ -156,6 +132,7 @@ export default {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
           title: this.title,
+          status: this.dbStatus,
         }
       }).then(res => {
         this.tableData = res.data?.list
@@ -163,7 +140,7 @@ export default {
       })
     },
     reset() {
-      this.title = null
+      this.dbStatus = null
       this.load(1)
     },
     handleCurrentChange(pageNum) {

@@ -15,7 +15,7 @@
         left join department on apply.department_id=department.id
         <where>
             <if test="id != null"> and id= #{id}</if>
-            <if test="userId != null"> and user_id= #{userId}</if>
+            <if test="userId != null"> and apply.user_id= #{userId}</if>
             <if test="departmentId != null"> and department_id= #{departmentId}</if>
             <if test="description != null"> and description= #{description}</if>
             <if test="process != null"> and process= #{process}</if>
