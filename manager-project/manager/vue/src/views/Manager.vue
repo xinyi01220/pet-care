@@ -46,6 +46,13 @@
             <el-menu-item index="/department">社团信息</el-menu-item>
           </el-submenu>
 
+          <el-submenu index="daily">
+            <template slot="title">
+              <i class="el-icon-menu"></i><span>日常管理</span>
+            </template>
+            <el-menu-item index="/apply">申请审批</el-menu-item>
+          </el-submenu>
+
           <el-submenu index="user">
             <template slot="title">
               <i class="el-icon-menu"></i><span>用户管理</span>
