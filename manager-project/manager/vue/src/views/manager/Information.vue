@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="search">
-      <el-input placeholder="请输入活动标题" style="width: 200px" v-model="name"></el-input>
+      <el-input placeholder="请输入资讯标题" style="width: 200px" v-model="name"></el-input>
       <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
       <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
     </div>
@@ -15,17 +15,9 @@
       <el-table :data="tableData" stripe  @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="id" label="序号" width="80" align="center" sortable></el-table-column>
-        <el-table-column label="宣传图片">
-          <template v-slot="scope">
-            <div style="display: flex; align-items: center">
-              <el-image style="width: 40px; height: 40px; border-radius: 50%" v-if="scope.row.img"
-                        :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="name" label="活动名称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="time" label="活动时间" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="description" label="活动内容" show-overflow-tooltip>
+        <el-table-column prop="name" label="资讯名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="time" label="发布时间" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="description" label="资讯内容" show-overflow-tooltip>
           <template v-slot="scope">
             <el-button type="success" @click="viewEditor(scope.row.description)">查看内容</el-button>
           </template>
@@ -56,21 +48,10 @@
 
     <el-dialog title="信息" :visible.sync="fromVisible" width="60%" :close-on-click-modal="false" destroy-on-close @close="cancel">
       <el-form label-width="100px" style="padding-right: 50px" :model="form" :rules="rules" ref="formRef">
-        <el-form-item label="宣传图片">
-          <el-upload
-              class="avatar-uploader"
-              :action="$baseUrl + '/files/upload'"
-              :headers="{ token: user.token }"
-              list-type="picture"
-              :on-success="handleAvatarSuccess"
-          >
-            <el-button type="primary">上传图片</el-button>
-          </el-upload>
-        </el-form-item>
-        <el-form-item prop="name" label="活动名称">
+        <el-form-item prop="name" label="资讯名称">
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item prop="description" label="活动介绍">
+        <el-form-item prop="description" label="资讯内容">
           <div id="editor"></div>
         </el-form-item>
       </el-form>
@@ -80,7 +61,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="社团介绍" :visible.sync="editorVisible" width="50%">
+    <el-dialog title="资讯内容" :visible.sync="editorVisible" width="50%">
       <div v-html="this.viewData" class="w-e-text"></div>
     </el-dialog>
 
@@ -104,7 +85,7 @@ function initWangEditor(content) {	setTimeout(() => {
 }
 
 export default {
-  name: "Activity",
+  name: "Information",
   data() {
     return {
       tableData: [],  // 所有的数据
@@ -146,14 +127,14 @@ export default {
     },
     cancel() {
       this.fromVisible = false
-      location.href = '/activity'
+      location.href = '/information'
     },
     save() {   // 保存按钮触发的逻辑  它会触发新增或者更新
       this.$refs.formRef.validate((valid) => {
         if (valid) {
           this.form.description = editor.txt.html()
           this.$request({
-            url: this.form.id ? '/activity/update' : '/activity/add',
+            url: this.form.id ? '/information/update' : '/information/add',
             method: this.form.id ? 'PUT' : 'POST',
             data: this.form
           }).then(res => {
@@ -170,7 +151,7 @@ export default {
     },
     del(id) {   // 单个删除
       this.$confirm('您确定删除吗？', '确认删除', {type: "warning"}).then(response => {
-        this.$request.delete('/activity/delete/' + id).then(res => {
+        this.$request.delete('/information/delete/' + id).then(res => {
           if (res.code === '200') {   // 表示操作成功
             this.$message.success('操作成功')
             this.load(1)
@@ -190,7 +171,7 @@ export default {
         return
       }
       this.$confirm('您确定批量删除这些数据吗？', '确认删除', {type: "warning"}).then(response => {
-        this.$request.delete('/activity/delete/batch', {data: this.ids}).then(res => {
+        this.$request.delete('/information/delete/batch', {data: this.ids}).then(res => {
           if (res.code === '200') {   // 表示操作成功
             this.$message.success('操作成功')
             this.load(1)
@@ -203,7 +184,7 @@ export default {
     },
     load(pageNum) {  // 分页查询
       if (pageNum) this.pageNum = pageNum
-      this.$request.get('/activity/selectPage', {
+      this.$request.get('/information/selectPage', {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,

@@ -28,6 +28,7 @@ const routes = [
       { path: 'apply', name: 'Apply', meta: { name: '申请审批' }, component: () => import('../views/manager/Apply') },
       { path: 'member', name: 'Member', meta: { name: '社团成员' }, component: () => import('../views/manager/Member') },
       { path: 'activity', name: 'Activity', meta: { name: '活动' }, component: () => import('../views/manager/Activity') },
+      { path: 'information', name: 'Information', meta: { name: '活动' }, component: () => import('../views/manager/Information') },
     ]
   },
   {
@@ -40,6 +41,7 @@ const routes = [
       { path: 'departmentDetail', name: 'DepartmentDetail', meta: { name: '社团信息' }, component: () => import('../views/front/DepartmentDetail') },
       { path: 'activityDetail', name: 'ActivityDetail', meta: { name: '活动信息' }, component: () => import('../views/front/ActivityDetail') },
       { path: 'apply', name: 'Apply', meta: { name: '申请的社团' }, component: () => import('../views/front/Apply') },
+      { path: 'informationDetail', name: 'InformationDetail', meta: { name: '资讯信息' }, component: () => import('../views/front/InformationDetail') },
     ]
   },
   { path: '/login', name: 'Login', meta: { name: '登录' }, component: () => import('../views/Login.vue') },

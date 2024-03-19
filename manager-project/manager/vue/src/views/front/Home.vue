@@ -7,14 +7,14 @@
         </el-carousel-item>
       </el-carousel>
 
-      <div style="height: 350px">
+      <div style="height: 370px">
         <el-row :gutter="10">
           <el-col :span="12">
             <div style="margin: 20px 0 20px 0; width: 130px; background-color: #f16f44; height: 30px; line-height: 30px; text-align: center; font-size: 18px; color: white; font-weight: bold; border-radius: 20px">社团活动</div>
             <div v-for="item in activityData">
               <el-row :gutter="20" style="margin-bottom: 10px">
                 <el-col :span="4">
-                  <img :src="item.img" alt="" style="width: 100%; height:65px; border-radius:10px">
+                  <img :src="item.img" alt="" style="width: 100%; height:80px; border-radius:10px">
                 </el-col>
                 <el-col :span="15">
                   <div style="font-weight: 550;font-size:15px;color: #404040;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
@@ -42,7 +42,32 @@
           </div>
           </el-col>
           <el-col :span="12">
+            <div style="margin: 20px 0 20px 0; width: 130px; background-color: #f16f44; height: 30px; line-height: 30px; text-align: center; font-size: 18px; color: white; font-weight: bold; border-radius: 20px">资讯</div>
+            <div v-for="item in informationData">
+              <el-row :gutter="20" style="margin-bottom: 10px">
+                <el-col :span="18">
+                  <div style="font-weight: 550;font-size:15px;color: #404040;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                    <a href="#" @click="navTo('/front/informationDetail?id='+item.id)">{{item.name}}</a>
+                  </div>
+                </el-col>
+                <el-col :span="6">
 
+                  <div style="color: #8d8a8a">{{item.time}}</div>
+                </el-col>
+              </el-row>
+            </div>
+            <div style="text-align: right;">
+              <div class="pagination">
+                <el-pagination
+                    background
+                    @current-change="handleInformationCurrentChange"
+                    :current-page="InformationPageNum"
+                    :page-size="InformationPageSize"
+                    layout="prev,next"
+                    :total="InformationTotal">
+                </el-pagination>
+              </div>
+            </div>
           </el-col>
         </el-row>
 
@@ -67,7 +92,14 @@
 <script>
 
 
+import information from "@/views/manager/Information.vue";
+
 export default {
+  computed: {
+    information() {
+      return information
+    }
+  },
 
   data() {
     return {
@@ -81,14 +113,36 @@ export default {
       ActivityPageNum: 1,
       ActivityPageSize: 3,
       ActivityTotal: 0,
+      informationData: [],
+      InformationPageNum: 1,
+      InformationPageSize: 3,
+      InformationTotal: 0,
     }
   },
   mounted() {
     this.loadDepartment()
     this.loadActivity()
+    this.loadInformation()
   },
   // methods：本页面所有的点击事件或者其他函数定义区
   methods: {
+    loadInformation(pageNum) {
+      if (pageNum) this.InformationPageNum = pageNum
+      this.$request.get('/information/selectPage2', {
+        params: {
+          pageNum: this.InformationPageNum,
+          pageSize: this.InformationPageSize ,
+        }
+      }).then(res => {
+        if (res.code === '200') {
+          this.informationData = res.data?.list
+          this.InformationTotal = res.data?.total
+        } else {
+          this.$message.error(res.msg)
+        }
+
+      })
+    },
     loadActivity(pageNum) {
       if (pageNum) this.ActivityPageNum = pageNum
       this.$request.get('/activity/selectPage2', {
@@ -120,6 +174,9 @@ export default {
     },
     handleActivityCurrentChange(pageNum) {
       this.loadActivity(pageNum)
+    },
+    handleInformationCurrentChange(pageNum) {
+      this.loadInformation(pageNum)
     },
   }
 }

@@ -53,6 +53,7 @@
             <el-menu-item index="/apply">申请审批</el-menu-item>
             <el-menu-item index="/member">社团成员</el-menu-item>
             <el-menu-item index="/activity">活动</el-menu-item>
+            <el-menu-item index="/information">咨询</el-menu-item>
           </el-submenu>
 
           <el-submenu index="user">
