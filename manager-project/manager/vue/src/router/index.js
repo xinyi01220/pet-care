@@ -38,6 +38,7 @@ const routes = [
       { path: 'home', name: 'Home', meta: { name: '系统首页' }, component: () => import('../views/front/Home') },
       { path: 'person', name: 'Person', meta: { name: '个人信息' }, component: () => import('../views/front/Person') },
       { path: 'departmentDetail', name: 'DepartmentDetail', meta: { name: '社团信息' }, component: () => import('../views/front/DepartmentDetail') },
+      { path: 'activityDetail', name: 'ActivityDetail', meta: { name: '活动信息' }, component: () => import('../views/front/ActivityDetail') },
       { path: 'apply', name: 'Apply', meta: { name: '申请的社团' }, component: () => import('../views/front/Apply') },
     ]
   },

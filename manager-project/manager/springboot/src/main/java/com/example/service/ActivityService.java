@@ -74,14 +74,23 @@ public class ActivityService {
      * 根据ID查询
      */
     public Activity selectById(Integer id) {
-        return activityMapper.selectById(id);
+        Activity activity= activityMapper.selectById(id);
+        Department department=departmentMapper.selectById(activity.getDepartmentId());
+        if(ObjectUtil.isNotNull(department)){
+            activity.setDepartmentName(department.getName());
+        }
+        return activity;
     }
 
     /**
      * 查询所有
      */
     public List<Activity> selectAll(Activity activity) {
-        return activityMapper.selectAll(activity);
+        List<Activity> activities=activityMapper.selectAll(activity);
+        for (Activity dbActivity:activities){
+            dbActivity.setDescription(dbActivity.getDescription().replaceAll("<p>","").replaceAll("</p>",""));
+        }
+        return activities;
     }
 
     /**
@@ -98,6 +107,11 @@ public class ActivityService {
 
         PageHelper.startPage(pageNum, pageSize);
         List<Activity> list = activityMapper.selectAll(activity);
+        return PageInfo.of(list);
+    }
+    public PageInfo<Activity> selectPage2(Activity activity, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Activity> list = selectAll(activity);
         return PageInfo.of(list);
     }
 
