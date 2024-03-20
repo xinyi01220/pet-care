@@ -42,7 +42,7 @@
             <template slot="title">
               <i class="el-icon-menu"></i><span>信息管理</span>
             </template>
-            <el-menu-item index="/notice">公告信息</el-menu-item>
+            <el-menu-item v-if="user.role==='ADMIN'" index="/notice">公告信息</el-menu-item>
             <el-menu-item index="/department">社团信息</el-menu-item>
           </el-submenu>
 
@@ -54,9 +54,10 @@
             <el-menu-item index="/member">社团成员</el-menu-item>
             <el-menu-item index="/activity">活动</el-menu-item>
             <el-menu-item index="/information">咨询</el-menu-item>
+            <el-menu-item index="/comment">社团评论</el-menu-item>
           </el-submenu>
 
-          <el-submenu index="user">
+          <el-submenu v-if="user.role==='ADMIN'" index="user">
             <template slot="title">
               <i class="el-icon-menu"></i><span>用户管理</span>
             </template>

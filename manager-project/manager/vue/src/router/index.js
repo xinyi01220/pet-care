@@ -28,7 +28,8 @@ const routes = [
       { path: 'apply', name: 'Apply', meta: { name: '申请审批' }, component: () => import('../views/manager/Apply') },
       { path: 'member', name: 'Member', meta: { name: '社团成员' }, component: () => import('../views/manager/Member') },
       { path: 'activity', name: 'Activity', meta: { name: '活动' }, component: () => import('../views/manager/Activity') },
-      { path: 'information', name: 'Information', meta: { name: '活动' }, component: () => import('../views/manager/Information') },
+      { path: 'information', name: 'Information', meta: { name: '资讯' }, component: () => import('../views/manager/Information') },
+      { path: 'comment', name: 'Comment', meta: { name: '评论' }, component: () => import('../views/manager/Comment') },
     ]
   },
   {

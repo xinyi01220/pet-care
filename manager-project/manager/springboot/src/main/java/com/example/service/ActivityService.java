@@ -98,7 +98,7 @@ public class ActivityService {
      */
     public PageInfo<Activity> selectPage(Activity activity, Integer pageNum, Integer pageSize) {
         Account currentUser= TokenUtils.getCurrentUser();
-        if(RoleEnum.USER.name().equals(currentUser.getRole())){//普通用户,不是管理员
+        if(RoleEnum.USER.name().equals(currentUser.getRole())){//学生用户,不是管理员
             Department department= departmentMapper.selectByUserId(currentUser.getId());
             if(ObjectUtil.isNotNull(department)){//当前用户是社长
                 activity.setDepartmentId(department.getId());//只能查看自己社团的活动
