@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ArticleMapper">
+
+    <sql id="Base_Column_List">
+        article_id,user_id,user_name,title,content,like_count,category_id,create_time
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Article">
+        select
+        article.*, category.name as categoryName, user.name as userName
+        from article
+        left join category
+        on article.category_id = category.id
+        left join user
+        on article.user_id = user.id
+        <where>
+            <if test="title != null">and article.title like concat('%', #{title}, '%')</if>
+            <if test="categoryName != null">and category.name like concat('%', #{categoryName}, '%')</if>
+            <if test="userName != null">and user.name like concat('%', #{userName}, '%')</if>
+            <if test="userId != null">and user.id = #{userId}</if>
+        </where>
+        order by article_id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Article">
+        select
+        article.*, category.name as categoryName, user.name as userName
+        from article
+        left join category
+        on article.category_id = category
+        left join user
+        on article.user_id = user.id
+        where article.article_id = #{articleId}
+    </select>
+
+    <select id="selectLike" resultType="com.example.entity.Article">
+        select article.*, user.name as userName
+        from like
+        left join article
+        on like.article_id = article.article_id
+        left join category
+        on article.category_id = category.id
+        left join user
+        on article.user_id = user.id
+        <where>
+            <if test="title != null">and article.title like concat('%', #{title}, '%')</if>
+            <if test="categoryName != null">and category.name like concat('%', #{categoryName}, '%')</if>
+            <if test="userName != null">and user.name like concat('%', #{userName}, '%')</if>
+            <if test="userId != null">and likes.user_id = #{userId}</if>
+        </where>
+        order by article_id desc
+    </select>
+
+    <select id="selectCollect" resultType="com.example.entity.Article">
+        select article.*, user.name as userName
+        from collect
+        left join article
+        on collect.article_id = article.article_id
+        left join category
+        on article.category_id = category.id
+        left join user
+        on article.user_id = user.id
+        <where>
+            <if test="title != null">and article.title like concat('%', #{title}, '%')</if>
+            <if test="categoryName != null">and category.name like concat('%', #{categoryName}, '%')</if>
+            <if test="userName != null">and user.name like concat('%', #{userName}, '%')</if>
+            <if test="userId != null">and collect.user_id = #{userId}</if>
+        </where>
+        order by article_id desc
+    </select>
+
+<!--评论相关-->
+    <select id="selectComment" resultType="com.example.entity.Article">
+        select comment.*, user.name as userName
+        from comment
+        left join article
+        on comment.article_id = article.article_id
+        left join user
+        on article.user_id = user.id
+        <where>
+            <if test="title != null">and article.title like concat('%', #{title}, '%')</if>
+            <if test="userName != null">and user.name like concat('%', #{userName}, '%')</if>
+            <if test="userId != null">and user.id = #{userId}</if>
+        </where>
+    group by comment.article_id
+    order by comment.create_time desc
+    </select>
+
+    <delete id="deleteById">
+        delete from article
+        where article_id = #{articleId}
+    </delete>
+
+<!--    适合具有可选字段的实体类的插入-->
+    <insert id="insert" parameterType="com.example.entity.Article" useGeneratedKeys="true" keyProperty="articleId">
+        insert into article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="articleId != null">article_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="likeCount != null">like_count,</if>
+            <if test="categoryId != null">category_id,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="articleId != null">#{articleId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Article">
+        update article
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </set>
+        where article_id = #{articleId}
+    </update>
+
+</mapper>

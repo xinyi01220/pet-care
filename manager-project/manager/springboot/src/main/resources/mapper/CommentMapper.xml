@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.CommentMapper">
+
+    <sql id="Base_Column_List">
+        comment_id,content,user_id,parent_id,root_id,create_time,article_id
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Comment">
+        select
+        comment.*, user.name as userName,  user.avatar as avatar, u2.name as replyUser
+        from comment
+        left join user
+        on comment.user_id = user.id
+        left join comment c2
+        on comment.parent_id = c2.comment_id
+        left join user u2
+        on c2.user_id = u2.id
+        <where>
+            <if test="userName != null"> and user.name like concat('%', #{userName}, '%')</if>
+            <if test="articleId != null"> and comment.article_id  = #{articleId}</if>
+            <if test="rootId != null"> and comment.root_id = #{rootId}</if>
+        </where>
+        order by comment_id desc
+    </select>
+
+    <select id="selectForUser" resultType="com.example.entity.Comment">
+        select
+        comment.*, user.name as userName,  user.avatar as avatar
+        from comment
+        left join user
+        on comment.user_id = user.id
+        <where>
+            <if test="userName != null"> and user.name like concat('%', #{userName}, '%')</if>
+            <if test="articleId != null"> and comment.article_id  = #{articleId}</if>
+            and parent_id is null
+        </where>
+        order by comment_id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Comment">
+        select
+        <include refid="Base_Column_List" />
+        from comment
+        where comment_id = #{commentId}
+    </select>
+
+    <delete id="deleteById">
+        delete from comment
+        where  comment_id = #{commentId}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Comment" useGeneratedKeys="true" keyProperty="commentId">
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commentId != null">comment_id,</if>
+            <if test="content != null">content,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="rootId != null">root_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="articleId != null">article_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commentId != null">#{commentId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="rootId != null">#{rootId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="articleId != null">#{articleId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Comment">
+        update comment
+        <set>
+            <if test="content != null">content = #{content},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="rootId != null">root_id = #{rootId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="articleId != null">article_id = #{articleId},</if>
+        </set>
+        where comment_id = #{commentId}
+    </update>
+
+</mapper>
