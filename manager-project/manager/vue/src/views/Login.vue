@@ -15,24 +15,34 @@
             <el-option label="用户" value="USER"></el-option>
           </el-select>
         </el-form-item>
-
+        <el-form-item prop="code">
+          <div style="display: flex">
+            <el-input style="flex: 1" size="medium" v-model="code"></el-input>
+            <Identify :identifyCode="identifyCode" @click.native="refreshCode" />
+          </div>
+        </el-form-item>
         <el-form-item>
           <el-button style="width: 100%; background-color: #2c334c; border-color: #2c334c; color: white" @click="login">登 录</el-button>
         </el-form-item>
-<!--        <div style="display: flex; align-items: center">-->
-<!--          <div style="flex: 1"></div>-->
-<!--          <div style="flex: 1; text-align: right">-->
-<!--            还没有账号？请 <a href="/register">注册</a>-->
-<!--          </div>-->
-<!--        </div>-->
+        <div style="display: flex; align-items: center">
+          <div style="flex: 1"></div>
+          <div style="flex: 1; text-align: right">
+            还没有账号？请 <a href="/register">注册</a>
+          </div>
+        </div>
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
+import Identify from "@/components/Identify";
+
 export default {
   name: "Login",
+  components: {
+    Identify
+  },
   data() {
     return {
       // form: { role: 'ADMIN' },// 默认是管理员
@@ -44,13 +54,30 @@ export default {
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
         ]
-      }
+      },
+      code: '',   // 表单绑定的验证码
+      // 图片验证码
+      identifyCode: '',
+      // 验证码规则
+      identifyCodes: '123456789ABCDEFGHGKMNPQRSTUVWXY',
     }
   },
-  created() {
-
+  mounted() {
+    this.makeCode(this.identifyCodes, 4)
+    this.refreshCode()
   },
   methods: {
+    // 切换验证码
+    refreshCode() {
+      this.identifyCode = ''
+      this.makeCode(this.identifyCodes, 4)
+    },
+    // 生成随机验证码
+    makeCode(o, l) {
+      for (let i = 0; i < l; i++) {
+        this.identifyCode += this.identifyCodes[Math.floor(Math.random() * (this.identifyCodes.length))]
+      }
+    },
     login() {
       this.$refs['formRef'].validate((valid) => {
         if (valid) {
