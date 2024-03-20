@@ -25,16 +25,12 @@ public class User extends Account implements Serializable {
     /** 角色标识 */
     private String role;
     private String level;
+    private String sex;
+    private String info;
+    private String birth;
     private Integer departmentId;
     private String departmentName;
 
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
-    }
 
     @Override
     public Integer getId() {
@@ -112,14 +108,36 @@ public class User extends Account implements Serializable {
         this.role = role;
     }
 
-
-
-    public String getDepartmentName() {
-        return departmentName;
+    public String getLevel() {
+        return level;
     }
 
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    public String getBirth() {
+        return birth;
+    }
+
+    public void setBirth(String birth) {
+        this.birth = birth;
     }
 
     public Integer getDepartmentId() {
@@ -128,5 +146,13 @@ public class User extends Account implements Serializable {
 
     public void setDepartmentId(Integer departmentId) {
         this.departmentId = departmentId;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 }

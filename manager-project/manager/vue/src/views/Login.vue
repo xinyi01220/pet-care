@@ -15,12 +15,12 @@
             <el-option label="用户" value="USER"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="code">
-          <div style="display: flex">
-            <el-input style="flex: 1" size="medium" v-model="code"></el-input>
-            <Identify :identifyCode="identifyCode" @click.native="refreshCode" />
-          </div>
-        </el-form-item>
+<!--        <el-form-item prop="code">-->
+<!--          <div style="display: flex">-->
+<!--            <el-input style="flex: 1" size="medium" v-model="code"></el-input>-->
+<!--            <Identify :identifyCode="identifyCode" @click.native="refreshCode" />-->
+<!--          </div>-->
+<!--        </el-form-item>-->
         <el-form-item>
           <el-button style="width: 100%; background-color: #2c334c; border-color: #2c334c; color: white" @click="login">登 录</el-button>
         </el-form-item>
@@ -40,9 +40,9 @@ import Identify from "@/components/Identify";
 
 export default {
   name: "Login",
-  components: {
-    Identify
-  },
+  // components: {
+  //   Identify
+  // },
   data() {
     return {
       // form: { role: 'ADMIN' },// 默认是管理员
@@ -55,11 +55,11 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' },
         ]
       },
-      code: '',   // 表单绑定的验证码
-      // 图片验证码
-      identifyCode: '',
-      // 验证码规则
-      identifyCodes: '123456789ABCDEFGHGKMNPQRSTUVWXY',
+      // code: '',   // 表单绑定的验证码
+      // // 图片验证码
+      // identifyCode: '',
+      // // 验证码规则
+      // identifyCodes: '123456789ABCDEFGHGKMNPQRSTUVWXY',
     }
   },
   mounted() {
@@ -67,18 +67,28 @@ export default {
     this.refreshCode()
   },
   methods: {
-    // 切换验证码
-    refreshCode() {
-      this.identifyCode = ''
-      this.makeCode(this.identifyCodes, 4)
-    },
-    // 生成随机验证码
-    makeCode(o, l) {
-      for (let i = 0; i < l; i++) {
-        this.identifyCode += this.identifyCodes[Math.floor(Math.random() * (this.identifyCodes.length))]
-      }
-    },
+    // // 切换验证码
+    // refreshCode() {
+    //   this.identifyCode = ''
+    //   this.makeCode(this.identifyCodes, 4)
+    // },
+    // // 生成随机验证码
+    // makeCode(o, l) {
+    //   for (let i = 0; i < l; i++) {
+    //     this.identifyCode += this.identifyCodes[Math.floor(Math.random() * (this.identifyCodes.length))]
+    //   }
+    // },
     login() {
+      // if (!this.code) {
+      //   this.$message.warning('请输入验证码')
+      //   this.refreshCode()
+      //   return
+      // }
+      // if (this.code.toLowerCase() !== this.identifyCode.toLowerCase()) {
+      //   this.$message.warning('验证码错误')
+      //   this.refreshCode()
+      //   return
+      // }
       this.$refs['formRef'].validate((valid) => {
         if (valid) {
           // 验证通过

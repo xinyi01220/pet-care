@@ -122,7 +122,7 @@ export default {
         parentId: parentId,
 
       }
-      this.$request.post('/comment/add', data).then(res => {
+      this.$request.post('/departmentComment/add', data).then(res => {
         if (res.code === '200') {
           this.$message.success('评论成功')
           this.content = null
@@ -133,7 +133,7 @@ export default {
       })
     },
     loadComment() {
-      this.$request.get('/comment/selectAll').then(res => {
+      this.$request.get('/departmentComment/selectAll').then(res => {
         if (res.code === '200') {
           this.commentData = res.data
         } else {

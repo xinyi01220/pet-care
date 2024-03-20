@@ -1,41 +1,43 @@
 <template>
   <div>
     <div class="search">
-      <el-input placeholder="请输入活动标题" style="width: 200px" v-model="name"></el-input>
+      <el-input placeholder="请输入活动名称查询" style="width: 200px" v-model="name"></el-input>
       <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
       <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
     </div>
 
     <div class="operation">
-      <el-button type="primary" plain @click="handleAdd" v-if="user.role === 'USER'">新增</el-button>
+      <el-button type="primary" plain @click="handleAdd">新增</el-button>
       <el-button type="danger" plain @click="delBatch">批量删除</el-button>
     </div>
 
     <div class="table">
-      <el-table :data="tableData" stripe  @selection-change="handleSelectionChange">
+      <el-table :data="tableData" strip @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="id" label="序号" width="80" align="center" sortable></el-table-column>
-        <el-table-column label="宣传图片">
+        <el-table-column prop="id" label="序号" width="70" align="center" sortable></el-table-column>
+        <el-table-column prop="name" label="活动名称"></el-table-column>
+        <el-table-column prop="description" label="活动简介" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="img" label="封面">
           <template v-slot="scope">
             <div style="display: flex; align-items: center">
-              <el-image style="width: 40px; height: 40px; border-radius: 50%" v-if="scope.row.img"
+              <el-image style="width: 50px; height: 50px; border-radius: 5px" v-if="scope.row.img"
                         :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="活动名称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="time" label="活动时间" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="description" label="活动内容" show-overflow-tooltip>
+        <el-table-column prop="start" label="开始时间"></el-table-column>
+        <el-table-column prop="end" label="结束时间"></el-table-column>
+        <el-table-column prop="departmentName" label="所属组织"></el-table-column>
+        <el-table-column prop="readCount" label="浏览量"></el-table-column>
+        <el-table-column label="查看活动详情" width="140">
           <template v-slot="scope">
-            <el-button type="success" @click="viewEditor(scope.row.description)">查看内容</el-button>
+            <el-button @click="preview(scope.row.content)">查看活动详情</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="departmentName" label="所属社团"></el-table-column>
-
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" align="center" width="180">
           <template v-slot="scope">
-            <el-button plain type="primary" @click="handleEdit(scope.row)" size="mini" v-if="user.role === 'USER'">编辑</el-button>
-            <el-button plain type="danger" size="mini" @click=del(scope.row.id)>删除</el-button>
+            <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" plain @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -54,23 +56,31 @@
     </div>
 
 
-    <el-dialog title="信息" :visible.sync="fromVisible" width="60%" :close-on-click-modal="false" destroy-on-close @close="cancel">
-      <el-form label-width="100px" style="padding-right: 50px" :model="form" :rules="rules" ref="formRef">
-        <el-form-item label="宣传图片">
+    <el-dialog title="信息" :visible.sync="fromVisible" width="60%" :close-on-click-modal="false" destroy-on-close>
+      <el-form :model="form" label-width="100px" style="padding-right: 50px" :rules="rules" ref="formRef">
+        <el-form-item label="活动名称" prop="name">
+          <el-input v-model="form.name" placeholder="活动名称"></el-input>
+        </el-form-item>
+        <el-form-item label="活动简介" prop="description">
+          <el-input type="textarea" v-model="form.description" placeholder="活动简介"></el-input>
+        </el-form-item>
+        <el-form-item label="封面" prop="img">
           <el-upload
-              class="avatar-uploader"
               :action="$baseUrl + '/files/upload'"
               :headers="{ token: user.token }"
               list-type="picture"
-              :on-success="handleAvatarSuccess"
+              :on-success="handleCoverSuccess"
           >
-            <el-button type="primary">上传图片</el-button>
+            <el-button type="primary">上传封面</el-button>
           </el-upload>
         </el-form-item>
-        <el-form-item prop="name" label="活动名称">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+        <el-form-item label="开始时间" prop="start">
+          <el-date-picker style="width: 100%" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="form.start" placeholder="开始时间"></el-date-picker>
         </el-form-item>
-        <el-form-item prop="description" label="活动介绍">
+        <el-form-item label="结束时间" prop="end">
+          <el-date-picker style="width: 100%" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="form.end" placeholder="结束时间"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="内容" prop="content">
           <div id="editor"></div>
         </el-form-item>
       </el-form>
@@ -80,28 +90,22 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="社团介绍" :visible.sync="editorVisible" width="50%">
-      <div v-html="this.viewData" class="w-e-text"></div>
+    <el-dialog title="活动详情" :visible.sync="fromVisible1" width="50%" :close-on-click-modal="false" :append-to-body="true" destroy-on-close>
+      <div class="w-e-text">
+        <div v-html="content"></div>
+      </div>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="fromVisible1 = false">关 闭</el-button>
+      </div>
     </el-dialog>
 
   </div>
 </template>
 
 <script>
-import E from 'wangeditor'
-
-let editor
-function initWangEditor(content) {	setTimeout(() => {
-  if (!editor) {
-    editor = new E('#editor')
-    editor.config.placeholder = '请输入内容'
-    editor.config.uploadFileName = 'file'
-    editor.config.uploadImgServer = 'http://localhost:9090/files/wang/upload'
-    editor.create()
-  }
-  editor.txt.html(content)
-}, 0)
-}
+import E from "wangeditor"
+import hljs from 'highlight.js'
 
 export default {
   name: "Activity",
@@ -113,45 +117,52 @@ export default {
       total: 0,
       name: null,
       fromVisible: false,
-      editorVisible: false,
       form: {},
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
       rules: {
         name: [
           {required: true, message: '请输入活动名称', trigger: 'blur'},
         ],
+        description: [
+          {required: true, message: '请输入活动简介', trigger: 'blur'},
+        ],
+        start: [
+          {required: true, message: '请输入活动开始时间', trigger: 'blur'},
+        ],
+        end: [
+          {required: true, message: '请输入活动结束时间', trigger: 'blur'},
+        ],
+
+
       },
       ids: [],
-      headerData: [],
-      viewData: null,
+      editor: null,
+      content: '',
+      fromVisible1: false
     }
   },
   created() {
     this.load(1)
   },
   methods: {
-    viewEditor(description) {
-      this.viewData = description
-      this.editorVisible = true
+    preview(content) {
+      this.content = content
+      this.fromVisible1 = true
     },
     handleAdd() {   // 新增数据
       this.form = {}  // 新增数据的时候清空数据
-      initWangEditor('')
       this.fromVisible = true   // 打开弹窗
+      this.setRichText('')
     },
     handleEdit(row) {   // 编辑数据
       this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
-      initWangEditor(this.form.description || '')
       this.fromVisible = true   // 打开弹窗
-    },
-    cancel() {
-      this.fromVisible = false
-      location.href = '/activity'
+      this.setRichText(this.form.content)
     },
     save() {   // 保存按钮触发的逻辑  它会触发新增或者更新
       this.$refs.formRef.validate((valid) => {
         if (valid) {
-          this.form.description = editor.txt.html()
+          this.form.content = this.editor.txt.html()
           this.$request({
             url: this.form.id ? '/activity/update' : '/activity/add',
             method: this.form.id ? 'PUT' : 'POST',
@@ -210,13 +221,8 @@ export default {
           name: this.name,
         }
       }).then(res => {
-        if (res.code === '200') {
-          this.tableData = res.data?.list
-          this.total = res.data?.total
-        } else {
-          this.$message.error(res.msg)
-        }
-
+        this.tableData = res.data?.list
+        this.total = res.data?.total
       })
     },
     reset() {
@@ -226,12 +232,26 @@ export default {
     handleCurrentChange(pageNum) {
       this.load(pageNum)
     },
-    handleAvatarSuccess(response, file, fileList) {
-      // 把图片url保存到img里
-      this.form.img = response.data
+    handleCoverSuccess(res) {
+      this.form.img = res.data
+    },
+    setRichText(content) {
+      this.$nextTick(() => {
+        this.editor = new E(`#editor`)
+        this.editor.highlight = hljs
+        this.editor.config.uploadImgServer = this.$baseUrl + '/files/editor/upload'
+        this.editor.config.uploadFileName = 'file'
+        this.editor.config.uploadImgHeaders = {
+          token: this.user.token
+        }
+        this.editor.config.uploadImgParams = {
+          type: 'img',
+        }
+        this.editor.create()  // 创建
+        this.editor.txt.html(content)
+      })
     },
   }
-
 }
 </script>
 

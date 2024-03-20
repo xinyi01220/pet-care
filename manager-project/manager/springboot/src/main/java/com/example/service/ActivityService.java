@@ -4,12 +4,10 @@ package com.example.service;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.example.common.enums.LevelEnum;
+import com.example.common.enums.LikesModuleEnum;
 import com.example.common.enums.ResultCodeEnum;
 import com.example.common.enums.RoleEnum;
-import com.example.entity.Account;
-import com.example.entity.Activity;
-import com.example.entity.Department;
-import com.example.entity.User;
+import com.example.entity.*;
 import com.example.exception.CustomException;
 import com.example.mapper.ActivityMapper;
 import com.example.mapper.DepartmentMapper;
@@ -22,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 社团活动表业务处理
@@ -33,12 +32,19 @@ public class ActivityService {
     private ActivityMapper activityMapper;
     @Resource
     DepartmentMapper departmentMapper;
+    @Resource
+    ActivitySignService activitySignService;
+
+    @Resource
+    LikesService likesService;
+
+    @Resource
+    CollectService collectService;
 
     /**
      * 新增
      */
     public void add(Activity activity) {
-        activity.setTime(DateUtil.format(new Date(), "yyyy-MM-dd"));
         //获取社团ID
         Account currentUser= TokenUtils.getCurrentUser();
         Department department= departmentMapper.selectByUserId(currentUser.getId());
@@ -74,12 +80,29 @@ public class ActivityService {
      * 根据ID查询
      */
     public Activity selectById(Integer id) {
-        Activity activity= activityMapper.selectById(id);
+        Activity activity = activityMapper.selectById(id);
         Department department=departmentMapper.selectById(activity.getDepartmentId());
         if(ObjectUtil.isNotNull(department)){
-            activity.setDepartmentName(department.getName());
+            activity.setDepartmentName(department.getName());//设置社团名称
         }
+        this.setAct(activity, TokenUtils.getCurrentUser());
+
+        int likesCount = likesService.selectByFidAndModule(id, LikesModuleEnum.ACTIVITY.getValue());
+        int collectCount = collectService.selectByFidAndModule(id, LikesModuleEnum.ACTIVITY.getValue());
+        activity.setLikesCount(likesCount);
+        activity.setCollectCount(collectCount);
+
+        Likes likes = likesService.selectUserLikes(id, LikesModuleEnum.ACTIVITY.getValue());
+        activity.setIsLike(likes != null);
+
+        Collect collect = collectService.selectUserCollect(id, LikesModuleEnum.ACTIVITY.getValue());
+        activity.setIsCollect(collect != null);
         return activity;
+    }
+    private void setAct(Activity act, Account currentUser) {
+        act.setIsEnd(DateUtil.parseDate(act.getEnd()).isBefore(new Date()));  // 活动的结束时间在当前时间之前  就表示活动结束了
+        ActivitySign activitySign = activitySignService.selectByActivityIdAndUserId(act.getId(), currentUser.getId());// 查看用户是否已经报名
+        act.setIsSign(activitySign != null);
     }
 
     /**
@@ -107,12 +130,83 @@ public class ActivityService {
 
         PageHelper.startPage(pageNum, pageSize);
         List<Activity> list = activityMapper.selectAll(activity);
-        return PageInfo.of(list);
+        PageInfo<Activity> pageInfo = PageInfo.of(list);
+        List<Activity> activityList = pageInfo.getList();
+        for (Activity act : activityList) {
+            this.setAct(act, currentUser);
+        }
+        return pageInfo;
     }
     public PageInfo<Activity> selectPage2(Activity activity, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
+        Account currentUser= TokenUtils.getCurrentUser();
         List<Activity> list = selectAll(activity);
-        return PageInfo.of(list);
+        PageInfo<Activity> pageInfo = PageInfo.of(list);
+        List<Activity> activityList = pageInfo.getList();
+        for (Activity act : activityList) {
+            this.setAct(act, currentUser);
+        }
+        return pageInfo;
+    }
+
+    /**
+     * 热门活动
+     */
+    public List<Activity> selectTop() {
+        List<Activity> activityList = this.selectAll(null);
+        activityList = activityList.stream().sorted((b1, b2) -> b2.getReadCount().compareTo(b1.getReadCount()))
+                .limit(2)
+                .collect(Collectors.toList());
+        return activityList;
+    }
+
+    public void updateReadCount(Integer activityId) {
+        activityMapper.updateReadCount(activityId);
+    }
+
+    // 查询出用户报名的活动列表
+    public PageInfo<Activity> selectUser(Activity activity, Integer pageNum, Integer pageSize) {
+        Account currentUser = TokenUtils.getCurrentUser();
+        if (RoleEnum.USER.name().equals(currentUser.getRole())) {
+            activity.setUserId(currentUser.getId());
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        List<Activity> list = activityMapper.selectUser(activity);
+        PageInfo<Activity> pageInfo = PageInfo.of(list);
+        List<Activity> activityList = pageInfo.getList();
+        for (Activity act : activityList) {
+            this.setAct(act, currentUser);
+        }
+        return pageInfo;
+    }
+    public PageInfo<Activity> selectLike(Activity activity, Integer pageNum, Integer pageSize) {
+        Account currentUser = TokenUtils.getCurrentUser();
+        if (RoleEnum.USER.name().equals(currentUser.getRole())) {
+            activity.setUserId(currentUser.getId());
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        List<Activity> list = activityMapper.selectLike(activity);
+        PageInfo<Activity> pageInfo = PageInfo.of(list);
+        List<Activity> activityList = pageInfo.getList();
+        for (Activity act : activityList) {
+            this.setAct(act, currentUser);
+        }
+        return pageInfo;
+    }
+
+    public PageInfo<Activity> selectCollect(Activity activity, Integer pageNum, Integer pageSize) {
+        Account currentUser = TokenUtils.getCurrentUser();
+        if (RoleEnum.USER.name().equals(currentUser.getRole())) {
+            activity.setUserId(currentUser.getId());
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        List<Activity> list = activityMapper.selectCollect(activity);
+        PageInfo<Activity> pageInfo = PageInfo.of(list);
+        List<Activity> activityList = pageInfo.getList();
+        for (Activity act : activityList) {
+            this.setAct(act, currentUser);
+        }
+        return pageInfo;
     }
 
 }

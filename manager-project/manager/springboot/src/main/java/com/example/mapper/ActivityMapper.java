@@ -2,6 +2,7 @@ package com.example.mapper;
 
 import com.example.entity.Activity;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -37,4 +38,15 @@ public interface ActivityMapper {
 
     @Select("select * from activity where user_id = #{userId}")
     Activity selectByUserId(Integer userId);
+
+    @Update("update activity set read_count = read_count + 1 where id = #{activityId}")
+    void updateReadCount(Integer activityId);
+
+    List<Activity> selectUser(Activity activity);
+
+    List<Activity> selectLike(Activity activity);
+
+    List<Activity> selectCollect(Activity activity);
+
+    List<Activity> selectComment(Activity activity);
 }

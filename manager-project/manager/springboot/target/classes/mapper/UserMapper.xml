@@ -5,7 +5,7 @@
 <mapper namespace="com.example.mapper.UserMapper">
 
     <sql id="Base_Column_List">
-        id,username,password,name,phone,email,avatar,role,level
+        id,username,password,name,phone,email,avatar,role,level,sex,birth,info
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.User">
@@ -21,6 +21,9 @@
             <if test="avatar != null"> and avatar= #{avatar}</if>
             <if test="role != null"> and role= #{role}</if>
             <if test="level != null"> and level= #{level}</if>
+            <if test="sex != null"> and sex= #{sex}</if>
+            <if test="birth != null"> and birth= #{birth}</if>
+            <if test="info != null"> and info= #{info}</if>
             <if test="departmentId != null"> and department_id= #{departmentId}</if>
         </where>
         order by id desc
@@ -32,6 +35,8 @@
         from user
         where id = #{id}
     </select>
+
+
 
     <delete id="deleteById">
         delete from user
@@ -51,6 +56,9 @@
                 <if test="role != null">role,</if>
                 <if test="level != null">level,</if>
                 <if test="departmentId != null">department_id,</if>
+                <if test="sex != null">sex,</if>
+                <if test="info != null">info,</if>
+                <if test="birth != null">birth,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="id != null">#{id},</if>
@@ -63,6 +71,9 @@
                 <if test="role != null">#{role},</if>
             <if test="level != null">#{level},</if>
             <if test="departmentId != null">#{departmentId},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="info != null">#{info},</if>
+            <if test="birth != null">#{birth},</if>
 
         </trim>
     </insert>
@@ -96,6 +107,15 @@
             </if>
             <if test="departmentId != null">
                 department_id = #{departmentId},
+            </if>
+            <if test="birth != null">
+                birth = #{birth},
+            </if>
+            <if test="info != null">
+                info = #{info},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
             </if>
         </set>
         where id = #{id} 

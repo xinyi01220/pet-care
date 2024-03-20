@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.entity.Comment;
+import com.example.entity.DepartmentComment;
 import com.example.service.CommentService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +13,8 @@ import java.util.List;
  * 评论信息表前端操作接口
  **/
 @RestController
-@RequestMapping("/comment")
-public class CommentController {
+@RequestMapping("/departmentComment")
+public class DepartmentCommentController {
 
     @Resource
     private CommentService commentService;
@@ -23,8 +23,8 @@ public class CommentController {
      * 新增
      */
     @PostMapping("/add")
-    public Result add(@RequestBody Comment comment) {
-        commentService.add(comment);
+    public Result add(@RequestBody DepartmentComment departmentComment) {
+        commentService.add(departmentComment);
         return Result.success();
     }
 
@@ -50,8 +50,8 @@ public class CommentController {
      * 修改
      */
     @PutMapping("/update")
-    public Result updateById(@RequestBody Comment comment) {
-        commentService.updateById(comment);
+    public Result updateById(@RequestBody DepartmentComment departmentComment) {
+        commentService.updateById(departmentComment);
         return Result.success();
     }
 
@@ -60,16 +60,16 @@ public class CommentController {
      */
     @GetMapping("/selectById/{id}")
     public Result selectById(@PathVariable Integer id) {
-        Comment comment = commentService.selectById(id);
-        return Result.success(comment);
+        DepartmentComment departmentComment = commentService.selectById(id);
+        return Result.success(departmentComment);
     }
 
     /**
      * 查询所有
      */
     @GetMapping("/selectAll")
-    public Result selectAll(Comment comment ) {
-        List<Comment> list = commentService.selectAll(comment);
+    public Result selectAll(DepartmentComment departmentComment) {
+        List<DepartmentComment> list = commentService.selectAll(departmentComment);
         return Result.success(list);
     }
 
@@ -77,10 +77,10 @@ public class CommentController {
      * 分页查询
      */
     @GetMapping("/selectPage")
-    public Result selectPage(Comment comment,
+    public Result selectPage(DepartmentComment departmentComment,
                              @RequestParam(defaultValue = "1") Integer pageNum,
                              @RequestParam(defaultValue = "10") Integer pageSize) {
-        PageInfo<Comment> page = commentService.selectPage(comment, pageNum, pageSize);
+        PageInfo<DepartmentComment> page = commentService.selectPage(departmentComment, pageNum, pageSize);
         return Result.success(page);
     }
 

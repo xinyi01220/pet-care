@@ -27,7 +27,7 @@ const routes = [
       { path: 'department', name: 'Department', meta: { name: '社团信息' }, component: () => import('../views/manager/Department') },
       { path: 'apply', name: 'Apply', meta: { name: '申请审批' }, component: () => import('../views/manager/Apply') },
       { path: 'member', name: 'Member', meta: { name: '社团成员' }, component: () => import('../views/manager/Member') },
-      { path: 'activity', name: 'Activity', meta: { name: '活动' }, component: () => import('../views/manager/Activity') },
+      { path: 'activity', name: 'Activity', meta: { name: '活动' }, component: () => import('../views/manager/Activity.vue') },
       { path: 'information', name: 'Information', meta: { name: '资讯' }, component: () => import('../views/manager/Information') },
       { path: 'comment', name: 'Comment', meta: { name: '评论' }, component: () => import('../views/manager/Comment') },
     ]
@@ -40,7 +40,8 @@ const routes = [
       { path: 'home', name: 'Home', meta: { name: '系统首页' }, component: () => import('../views/front/Home') },
       { path: 'person', name: 'Person', meta: { name: '个人信息' }, component: () => import('../views/front/Person') },
       { path: 'departmentDetail', name: 'DepartmentDetail', meta: { name: '社团信息' }, component: () => import('../views/front/DepartmentDetail') },
-      { path: 'activityDetail', name: 'ActivityDetail', meta: { name: '活动信息' }, component: () => import('../views/front/ActivityDetail') },
+      { path: 'activityDetail', name: 'ActivityDetail', meta: { name: '活动详情' }, component: () => import('../views/front/ActivityDetail') },
+      { path: 'activity', name: 'Activity', meta: { name: '社团信息' }, component: () => import('../views/front/Activity') },
       { path: 'apply', name: 'Apply', meta: { name: '申请的社团' }, component: () => import('../views/front/Apply') },
       { path: 'informationDetail', name: 'InformationDetail', meta: { name: '资讯信息' }, component: () => import('../views/front/InformationDetail') },
     ]

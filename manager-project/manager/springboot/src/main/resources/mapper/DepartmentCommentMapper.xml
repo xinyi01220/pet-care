@@ -2,17 +2,17 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.mapper.CommentMapper">
+<mapper namespace="com.example.mapper.DepartmentCommentMapper">
 
     <sql id="Base_Column_List">
         id,user_id,department_id,parent_id,content,time
     </sql>
 
-    <select id="selectAll" resultType="com.example.entity.Comment">
-        select comment.*, user.name as userName, user.avatar as userAvatar,department.name as departmentName
-        from comment
-        left join user on comment.user_id = user.id
-        left join department on comment.department_id = department.id
+    <select id="selectAll" resultType="com.example.entity.DepartmentComment">
+        select department_comment.*, user.name as userName, user.avatar as userAvatar,department.name as departmentName
+        from department_comment
+        left join user on department_comment.user_id = user.id
+        left join department on department_comment.department_id = department.id
         <where>
             <if test="id != null"> and id= #{id}</if>
             <if test="content != null"> and content like concat('%', #{content}, '%')</if>
@@ -24,20 +24,20 @@
         order by id desc
     </select>
 
-    <select id="selectById" resultType="com.example.entity.Comment">
+    <select id="selectById" resultType="com.example.entity.DepartmentComment">
         select
         <include refid="Base_Column_List" />
-        from comment
+        from department_comment
         where id = #{id}
     </select>
 
     <delete id="deleteById">
-        delete from comment
+        delete from department_comment
         where  id = #{id}
     </delete>
 
-    <insert id="insert" parameterType="com.example.entity.Comment" useGeneratedKeys="true">
-        insert into comment
+    <insert id="insert" parameterType="com.example.entity.DepartmentComment" useGeneratedKeys="true">
+        insert into department_comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="id != null">id,</if>
                 <if test="userId != null">user_id,</if>
@@ -56,8 +56,8 @@
         </trim>
     </insert>
 
-    <update id="updateById" parameterType="com.example.entity.Comment">
-        update comment
+    <update id="updateById" parameterType="com.example.entity.DepartmentComment">
+        update department_comment
         <set>
             <if test="userId != null">
                 user_id = #{userId},

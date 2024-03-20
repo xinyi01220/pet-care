@@ -30,6 +30,9 @@
         <el-table-column prop="level" label="身份 "></el-table-column>
         <el-table-column prop="role" label="角色"></el-table-column>
         <el-table-column prop="departmentName" label="社团"></el-table-column>
+        <el-table-column prop="sex" label="性别"></el-table-column>
+        <el-table-column prop="info" label="个人简介" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="birth" label="生日"></el-table-column>
         <el-table-column label="操作" align="center" width="180">
           <template v-slot="scope">
             <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>
@@ -82,6 +85,18 @@
           >
             <el-button type="primary">上传头像</el-button>
           </el-upload>
+        </el-form-item>
+        <el-form-item label="性别" prop="sex">
+          <el-radio-group v-model="form.sex">
+            <el-radio label="男"></el-radio>
+            <el-radio label="女"></el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="个人简介" prop="info">
+          <el-input type="textarea" v-model="form.info" placeholder="个人简介"></el-input>
+        </el-form-item>
+        <el-form-item label="生日" prop="birth">
+          <el-date-picker value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="form.birth" style="width: 100%"></el-date-picker>
         </el-form-item>
       </el-form>
 

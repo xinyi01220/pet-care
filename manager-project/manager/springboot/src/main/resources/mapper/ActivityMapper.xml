@@ -5,7 +5,7 @@
 <mapper namespace="com.example.mapper.ActivityMapper">
 
     <sql id="Base_Column_List">
-        id,img,name,description,department_id,time
+        id,img,name,description,department_id,content,start,end,read_count
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.Activity">
@@ -18,8 +18,66 @@
             <if test="img != null"> and img= #{img}</if>
             <if test="description != null"> and description like concat('%', #{description}, '%')</if>
             <if test="departmentId != null"> and department_id= #{departmentId}</if>
-            <if test="time != null"> and time= #{time}</if>
+            <if test="start != null"> and start= #{start}</if>
+            <if test="end != null"> and end= #{end}</if>
+            <if test="readCount != null"> and read_count= #{readCount}</if>
+            <if test="content != null"> and content like concat('%', #{content}, '%')</if>
         </where>
+        order by id desc
+    </select>
+    <select id="selectUser" resultType="com.example.entity.Activity">
+        select
+        activity.*
+        from activity_sign
+        left join activity
+        on activity_sign.activity_id = activity.id
+        <where>
+            <if test="name != null"> and activity.name like concat('%', #{name}, '%')</if>
+            <if test="userId != null">  and activity_sign.user_id = #{userId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectLike" resultType="com.example.entity.Activity">
+        select
+        activity.*
+        from likes
+        left join activity
+        on likes.fid = activity.id
+        <where>
+            and likes.module = '活动'
+            <if test="name != null"> and activity.name like concat('%', #{name}, '%')</if>
+            <if test="userId != null">  and likes.user_id = #{userId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectCollect" resultType="com.example.entity.Activity">
+        select
+        activity.*
+        from collect
+        left join activity
+        on collect.fid = activity.id
+        <where>
+            and collect.module = '活动'
+            <if test="name != null"> and activity.name like concat('%', #{name}, '%')</if>
+            <if test="userId != null">  and collect.user_id = #{userId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectComment" resultType="com.example.entity.Activity">
+        select
+        activity.*
+        from departmentComment
+        left join activity
+        on departmentComment.fid = activity.id
+        <where>
+            and departmentComment.module = '活动'
+            <if test="name != null"> and activity.name like concat('%', #{name}, '%')</if>
+            <if test="userId != null">  and departmentComment.user_id = #{userId}</if>
+        </where>
+        group by departmentComment.fid , departmentComment.module
         order by id desc
     </select>
 
@@ -43,7 +101,10 @@
             <if test="img != null">img,</if>
             <if test="description != null">description,</if>
             <if test="departmentId != null">department_id,</if>
-            <if test="time != null">time,</if>
+            <if test="start != null">start,</if>
+            <if test="end != null">end,</if>
+            <if test="readCount != null">read_count,</if>
+            <if test="content != null">content,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -51,7 +112,10 @@
             <if test="img != null">#{img},</if>
             <if test="description != null">#{description},</if>
             <if test="departmentId != null">#{departmentId},</if>
-            <if test="time != null">#{time},</if>
+            <if test="start != null">#{start},</if>
+            <if test="end != null">#{end},</if>
+            <if test="readCount != null">#{readCount},</if>
+            <if test="content != null">#{content},</if>
         </trim>
     </insert>
 
@@ -70,8 +134,17 @@
             <if test="departmentId != null">
                 department_id = #{departmentId},
             </if>
-            <if test="time != null">
-                time = #{time},
+            <if test="start != null">
+                start = #{start},
+            </if>
+            <if test="end != null">
+                end = #{end},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="readCount != null">
+                read_count = #{readCount},
             </if>
         </set>
         where id = #{id}

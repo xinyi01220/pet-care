@@ -2,15 +2,12 @@ package com.example.service;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.example.common.enums.LevelEnum;
 import com.example.common.enums.RoleEnum;
 import com.example.entity.Account;
-import com.example.entity.Comment;
+import com.example.entity.DepartmentComment;
 import com.example.entity.Department;
-import com.example.entity.User;
-import com.example.mapper.CommentMapper;
+import com.example.mapper.DepartmentCommentMapper;
 import com.example.mapper.DepartmentMapper;
-import com.example.mapper.UserMapper;
 import com.example.utils.TokenUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -27,23 +24,23 @@ import java.util.List;
 public class CommentService {
 
     @Resource
-    private CommentMapper commentMapper;
+    private DepartmentCommentMapper departmentCommentMapper;
     @Resource
     private DepartmentMapper departmentMapper;
 
     /**
      * 新增
      */
-    public void add(Comment comment) {
-        comment.setTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-        commentMapper.insert(comment);
+    public void add(DepartmentComment departmentComment) {
+        departmentComment.setTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        departmentCommentMapper.insert(departmentComment);
     }
 
     /**
      * 删除
      */
     public void deleteById(Integer id) {
-        commentMapper.deleteById(id);
+        departmentCommentMapper.deleteById(id);
     }
 
     /**
@@ -51,35 +48,35 @@ public class CommentService {
      */
     public void deleteBatch(List<Integer> ids) {
         for (Integer id : ids) {
-            commentMapper.deleteById(id);
+            departmentCommentMapper.deleteById(id);
         }
     }
 
     /**
      * 修改
      */
-    public void updateById(Comment comment) {
-        commentMapper.updateById(comment);
+    public void updateById(DepartmentComment departmentComment) {
+        departmentCommentMapper.updateById(departmentComment);
     }
 
     /**
      * 根据ID查询
      */
-    public Comment selectById(Integer id) {
-        return commentMapper.selectById(id);
+    public DepartmentComment selectById(Integer id) {
+        return departmentCommentMapper.selectById(id);
     }
 
     /**
      * 查询所有
      */
-    public List<Comment> selectAll(Comment comment) {
+    public List<DepartmentComment> selectAll(DepartmentComment departmentComment) {
         //先查出所有父结点
-        comment.setParentId(0);
-        List<Comment> allParents= commentMapper.selectAll(comment);
-        for (Comment parent : allParents) {
+        departmentComment.setParentId(0);
+        List<DepartmentComment> allParents= departmentCommentMapper.selectAll(departmentComment);
+        for (DepartmentComment parent : allParents) {
             //查询出每个父结点的所有子结点
-            comment.setParentId(parent.getId());
-            List<Comment> children= commentMapper.selectAll(comment);
+            departmentComment.setParentId(parent.getId());
+            List<DepartmentComment> children= departmentCommentMapper.selectAll(departmentComment);
             parent.setChildren(children);
         }
         return allParents;
@@ -88,17 +85,17 @@ public class CommentService {
     /**
      * 分页查询
      */
-    public PageInfo<Comment> selectPage(Comment comment, Integer pageNum, Integer pageSize) {
+    public PageInfo<DepartmentComment> selectPage(DepartmentComment departmentComment, Integer pageNum, Integer pageSize) {
         //获取当前用户
         Account currentUser= TokenUtils.getCurrentUser();
         if(RoleEnum.USER.name().equals(currentUser.getRole())){
             Department department= departmentMapper.selectByUserId(currentUser.getId());
             if(ObjectUtil.isNotNull(department)){
-                comment.setDepartmentId(department.getId());
+                departmentComment.setDepartmentId(department.getId());
             }
         }
         PageHelper.startPage(pageNum, pageSize);
-        List<Comment> list = commentMapper.selectAll(comment);
+        List<DepartmentComment> list = departmentCommentMapper.selectAll(departmentComment);
         return PageInfo.of(list);
     }
 

@@ -8,14 +8,31 @@ import java.io.Serializable;
 public class Activity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** ID */
+    /**
+     * ID
+     */
     private Integer id;
     private String name;
     private String description;
     private String img;
     private Integer departmentId;
-    private String time;
+    private Integer readCount;
+    private String content;
+    private String start;
+    private String end;
 
+
+
+    private Boolean isEnd;   // 活动是否结束
+    private Boolean isSign;  // 是否报名
+
+    private Integer likesCount;
+    private Integer collectCount;
+
+    private Boolean isLike;
+    private Boolean isCollect;
+
+    private Integer userId;
     private String departmentName;
 
     public Integer getId() {
@@ -58,12 +75,76 @@ public class Activity implements Serializable {
         this.departmentId = departmentId;
     }
 
-    public String getTime() {
-        return time;
+    public Integer getReadCount() {
+        return readCount;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setReadCount(Integer readCount) {
+        this.readCount = readCount;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
+
+    public Integer getLikesCount() {
+        return likesCount;
+    }
+
+    public void setLikesCount(Integer likesCount) {
+        this.likesCount = likesCount;
+    }
+
+    public Integer getCollectCount() {
+        return collectCount;
+    }
+
+    public void setCollectCount(Integer collectCount) {
+        this.collectCount = collectCount;
+    }
+
+    public Boolean getIsLike() {
+        return isLike;
+    }
+
+    public void setIsLike(Boolean like) {
+        isLike = like;
+    }
+
+    public Boolean getIsCollect() {
+        return isCollect;
+    }
+
+    public void setIsCollect(Boolean collect) {
+        isCollect = collect;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getDepartmentName() {
@@ -73,4 +154,20 @@ public class Activity implements Serializable {
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
     }
+    public void setIsSign(Boolean isSign) {
+        this.isSign = isSign;
+    }
+
+    public Boolean getIsSign() {
+        return this.isSign;
+    }
+
+    public void setIsEnd(Boolean isEnd) {
+        this.isEnd = isEnd;
+    }
+
+    public Boolean getIsEnd() {
+        return this.isEnd;
+    }
 }
+
