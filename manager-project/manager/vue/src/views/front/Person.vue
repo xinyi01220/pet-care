@@ -22,12 +22,23 @@
         <el-form-item label="姓名" prop="name">
           <el-input v-model="user.name" placeholder="姓名"></el-input>
         </el-form-item>
+        <el-form-item label="性别" prop="email">
+          <el-input v-model="user.sex" placeholder="性别"></el-input>
+        </el-form-item>
+        <el-form-item label="生日" prop="email">
+          <el-input v-model="user.birth" placeholder="生日"></el-input>
+        </el-form-item>
         <el-form-item label="电话" prop="phone">
           <el-input v-model="user.phone" placeholder="电话"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="user.email" placeholder="邮箱"></el-input>
         </el-form-item>
+        <el-form-item label="简介" prop="email">
+          <el-input v-model="user.info" placeholder="简介"></el-input>
+        </el-form-item>
+
+
         <div style="text-align: center; margin-bottom: 20px">
           <el-button type="primary" @click="update">保 存</el-button>
         </div>

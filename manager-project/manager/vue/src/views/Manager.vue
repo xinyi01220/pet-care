@@ -64,7 +64,14 @@
             </template>
             <el-menu-item index="/admin">管理员信息</el-menu-item>
             <el-menu-item index="/user">学生信息</el-menu-item>
-            <el-menu-item index="/comment">文章&活动评论</el-menu-item>
+          </el-submenu>
+          <el-submenu v-if="user.role==='ADMIN'" index="user">
+            <template slot="title">
+              <i class="el-icon-menu"></i><span>帖子&评论管理</span>
+            </template>
+            <el-menu-item index="/comment">帖子&活动评论</el-menu-item>
+            <el-menu-item index="/category">帖子分类</el-menu-item>
+            <el-menu-item index="/article">帖子信息</el-menu-item>
           </el-submenu>
         </el-menu>
       </div>
