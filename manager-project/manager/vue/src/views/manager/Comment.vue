@@ -24,7 +24,6 @@
         <el-table-column prop="module" label="模块"></el-table-column>
         <el-table-column label="操作" align="center" width="180">
           <template v-slot="scope">
-<!--            <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>-->
             <el-button size="mini" type="danger" plain @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -42,38 +41,6 @@
         </el-pagination>
       </div>
     </div>
-
-
-    <el-dialog title="信息" :visible.sync="fromVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
-      <el-form :model="form" label-width="100px" style="padding-right: 50px" :rules="rules" ref="formRef">
-        <el-form-item label="内容" prop="content">
-          <el-input v-model="form.content" placeholder="内容"></el-input>
-        </el-form-item>
-        <el-form-item label="评论人" prop="userId">
-          <el-input v-model="form.userId" placeholder="评论人"></el-input>
-        </el-form-item>
-        <el-form-item label="父级ID" prop="pid">
-          <el-input v-model="form.pid" placeholder="父级ID"></el-input>
-        </el-form-item>
-        <el-form-item label="根节点ID" prop="rootId">
-          <el-input v-model="form.rootId" placeholder="根节点ID"></el-input>
-        </el-form-item>
-        <el-form-item label="评论时间" prop="time">
-          <el-input v-model="form.time" placeholder="评论时间"></el-input>
-        </el-form-item>
-        <el-form-item label="关联ID" prop="fid">
-          <el-input v-model="form.fid" placeholder="关联ID"></el-input>
-        </el-form-item>
-        <el-form-item label="模块" prop="module">
-          <el-input v-model="form.module" placeholder="模块"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="fromVisible = false">取 消</el-button>
-        <el-button type="primary" @click="save">确 定</el-button>
-      </div>
-    </el-dialog>
-
 
   </div>
 </template>
@@ -99,33 +66,6 @@ export default {
     this.load(1)
   },
   methods: {
-    handleAdd() {   // 新增数据
-      this.form = {}  // 新增数据的时候清空数据
-      this.fromVisible = true   // 打开弹窗
-    },
-    handleEdit(row) {   // 编辑数据
-      this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
-      this.fromVisible = true   // 打开弹窗
-    },
-    save() {   // 保存按钮触发的逻辑  它会触发新增或者更新
-      this.$refs.formRef.validate((valid) => {
-        if (valid) {
-          this.$request({
-            url: this.form.id ? '/comment/update' : '/comment/add',
-            method: this.form.id ? 'PUT' : 'POST',
-            data: this.form
-          }).then(res => {
-            if (res.code === '200') {  // 表示成功保存
-              this.$message.success('保存成功')
-              this.load(1)
-              this.fromVisible = false
-            } else {
-              this.$message.error(res.msg)  // 弹出错误的信息
-            }
-          })
-        }
-      })
-    },
     del(id) {   // 单个删除
       this.$confirm('您确定删除吗？', '确认删除', {type: "warning"}).then(response => {
         this.$request.delete('/comment/delete/' + id).then(res => {
