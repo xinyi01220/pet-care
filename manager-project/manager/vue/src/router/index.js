@@ -31,6 +31,7 @@ const routes = [
       { path: 'information', name: 'Information', meta: { name: '资讯' }, component: () => import('../views/manager/Information') },
       { path: 'departmentComment', name: 'DepartmentComment', meta: { name: '组织评论' }, component: () => import('../views/manager/DepartmentComment.vue') },
       { path: 'comment', name: 'Comment', meta: { name: '文章&活动评论' }, component: () => import('../views/manager/Comment.vue') },
+      { path: 'activitySign', name: 'ActivitySign', meta: { name: '活动报名' }, component: () => import('../views/manager/ActivitySign.vue') },
     ]
   },
   {

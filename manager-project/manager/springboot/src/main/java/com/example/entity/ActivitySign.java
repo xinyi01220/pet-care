@@ -8,6 +8,8 @@ public class ActivitySign {
     private String time;
     private String activityName;
     private String userName;
+    private Integer departmentId;
+    private String departmentName;
 
     public String getActivityName() {
         return activityName;
@@ -55,5 +57,21 @@ public class ActivitySign {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public Integer getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Integer departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 }

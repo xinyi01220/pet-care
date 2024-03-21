@@ -28,6 +28,10 @@ public class User extends Account implements Serializable {
     private String sex;
     private String info;
     private String birth;
+
+    private Integer ArticleCount;
+    private Integer likesCount;
+    private Integer collectCount;
     private Integer departmentId;
     private String departmentName;
 
@@ -154,5 +158,29 @@ public class User extends Account implements Serializable {
 
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
+    }
+
+    public Integer getArticleCount() {
+        return ArticleCount;
+    }
+
+    public void setArticleCount(Integer articleCount) {
+        ArticleCount = articleCount;
+    }
+
+    public Integer getLikesCount() {
+        return likesCount;
+    }
+
+    public void setLikesCount(Integer likesCount) {
+        this.likesCount = likesCount;
+    }
+
+    public Integer getCollectCount() {
+        return collectCount;
+    }
+
+    public void setCollectCount(Integer collectCount) {
+        this.collectCount = collectCount;
     }
 }

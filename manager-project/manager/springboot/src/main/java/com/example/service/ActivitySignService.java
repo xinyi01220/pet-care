@@ -1,11 +1,15 @@
 package com.example.service;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.example.common.enums.ResultCodeEnum;
+import com.example.common.enums.RoleEnum;
 import com.example.entity.Account;
 import com.example.entity.ActivitySign;
+import com.example.entity.Department;
 import com.example.exception.CustomException;
 import com.example.mapper.ActivitySignMapper;
+import com.example.mapper.DepartmentMapper;
 import com.example.utils.TokenUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -19,7 +23,8 @@ public class ActivitySignService {
 
     @Resource
     ActivitySignMapper activitySignMapper;
-
+    @Resource
+    DepartmentMapper departmentMapper;
     public void add(ActivitySign activitySign) {
         Account currentUser = TokenUtils.getCurrentUser();
         ActivitySign as = this.selectByActivityIdAndUserId(activitySign.getActivityId(), currentUser.getId());  // 查看用户是否已经报名
@@ -28,6 +33,12 @@ public class ActivitySignService {
         }
         activitySign.setUserId(currentUser.getId());
         activitySign.setTime(DateUtil.now());
+
+        Department department= departmentMapper.selectByUserId(currentUser.getId());
+        if (ObjectUtil.isNotNull(department)) {
+            activitySign.setDepartmentId(department.getId());
+        }
+
         activitySignMapper.insert(activitySign);
     }
 
@@ -36,8 +47,22 @@ public class ActivitySignService {
     }
 
     public PageInfo<ActivitySign> selectPage(ActivitySign activitySign, Integer pageNum, Integer pageSize) {
+        Account currentUser= TokenUtils.getCurrentUser();
+        if(RoleEnum.USER.name().equals(currentUser.getRole())){//学生用户,不是管理员
+            Department department= departmentMapper.selectByUserId(currentUser.getId());
+            if(ObjectUtil.isNotNull(department)){//当前用户是社长
+                activitySign.setDepartmentId(department.getId());//只能查看自己社团的活动报名信息
+            }
+        }
         PageHelper.startPage(pageNum, pageSize);
         List<ActivitySign> list = activitySignMapper.selectAll(activitySign);
+        System.out.println(list);
+        for (ActivitySign temp:list){
+            if(ObjectUtil.isNotEmpty(temp.getDepartmentId())){
+                Department dbDepartment=departmentMapper.selectById(temp.getDepartmentId());
+                temp.setDepartmentName(dbDepartment.getName());
+            }
+        }
         return PageInfo.of(list);
     }
 

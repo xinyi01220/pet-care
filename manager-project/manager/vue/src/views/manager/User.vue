@@ -29,7 +29,7 @@
         <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column prop="level" label="身份 "></el-table-column>
         <el-table-column prop="role" label="角色"></el-table-column>
-        <el-table-column prop="departmentName" label="社团"></el-table-column>
+        <el-table-column prop="departmentName" label="主管社团"></el-table-column>
         <el-table-column prop="sex" label="性别"></el-table-column>
         <el-table-column prop="info" label="个人简介" show-overflow-tooltip></el-table-column>
         <el-table-column prop="birth" label="生日"></el-table-column>
