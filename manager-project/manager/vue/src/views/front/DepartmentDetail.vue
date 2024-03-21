@@ -115,6 +115,11 @@ export default {
       })
     },
     submit(content, parentId) {
+      //判断content是否为空
+      if (!content) {
+        this.$message.error('请输入评论内容')
+        return
+      }
       let data = {
         userId: this.user.id,
         departmentId: this.departmentId,

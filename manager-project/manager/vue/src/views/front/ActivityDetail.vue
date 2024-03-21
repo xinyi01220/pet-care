@@ -51,7 +51,7 @@
 import Comment from "@/components/Comment";
 export default {
   name: "ActivityDetail",
-  // components: {Comment},
+  components: {Comment},
   data() {
     return {
       activity: {},

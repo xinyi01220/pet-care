@@ -16,6 +16,7 @@ public class DepartmentComment implements Serializable {
     private String time;
     private String content;
     private Integer parentId;
+
     private List<DepartmentComment> children;
 
 
@@ -102,4 +103,5 @@ public class DepartmentComment implements Serializable {
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
     }
+
 }

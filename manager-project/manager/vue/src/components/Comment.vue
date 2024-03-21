@@ -76,7 +76,7 @@ export default {
   methods: {
     del(id) {   // 单个删除
       this.$confirm('您确定删除吗？', '确认删除', {type: "warning"}).then(response => {
-        this.$request.delete('/departmentComment/delete/' + id).then(res => {
+        this.$request.delete('/comment/delete/' + id).then(res => {
           if (res.code === '200') {   // 表示操作成功
             this.$message.success('操作成功')
             this.loadComment()
@@ -91,7 +91,7 @@ export default {
       this.$set(item, 'showReplyInput', !item.showReplyInput)
     },
     addReplay(item) {
-      this.$request.post('/departmentComment/add', { pid: item.id, rootId: item.rootId, content: item.replyContent, fid: this.fid, module: this.module }).then(res => {
+      this.$request.post('/comment/add', { pid: item.id, rootId: item.rootId, content: item.replyContent, fid: this.fid, module: this.module }).then(res => {
         if (res.code === '200') {
           this.$message.success('操作成功')
           item.replyContent = ''
@@ -100,20 +100,20 @@ export default {
       })
     },
     loadComment() {
-      this.$request.get('/departmentComment/selectForUser', {
+      this.$request.get('/comment/selectForUser', {
         params: {  fid: this.fid, module: this.module }
       }).then(res => {
         this.commentList = res.data || []
       })
 
-      this.$request.get('/departmentComment/selectCount', {
+      this.$request.get('/comment/selectCount', {
         params: { fid: this.fid, module: this.module }
       }).then(res => {
         this.commentCount = res.data || 0
       })
     },
     addComment() {
-      this.$request.post('/departmentComment/add', { content: this.commentContent, fid: this.fid, module: this.module }).then(res => {
+      this.$request.post('/comment/add', { content: this.commentContent, fid: this.fid, module: this.module }).then(res => {
         if (res.code === '200') {
           this.$message.success('操作成功')
           this.commentContent = ''

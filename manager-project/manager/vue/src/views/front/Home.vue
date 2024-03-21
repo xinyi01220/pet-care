@@ -6,73 +6,6 @@
           <img :src="item" alt="" style="width: 100%; height: 100%; border-radius: 10px">
         </el-carousel-item>
       </el-carousel>
-
-      <div style="height: 370px">
-        <el-row :gutter="10">
-          <el-col :span="12">
-            <div style="margin: 20px 0 20px 0; width: 130px; background-color: #f16f44; height: 30px; line-height: 30px; text-align: center; font-size: 18px; color: white; font-weight: bold; border-radius: 20px">社团活动</div>
-            <div v-for="item in activityData">
-              <el-row :gutter="20" style="margin-bottom: 10px">
-                <el-col :span="4">
-                  <img :src="item.img" alt="" style="width: 100%; height:80px; border-radius:10px">
-                </el-col>
-                <el-col :span="15">
-                  <div style="font-weight: 550;font-size:15px;color: #404040;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
-                    <a href="#" @click="navTo('/front/activityDetail?id='+item.id)">{{item.name}}</a>
-                  </div>
-                  <div class="clamp-text" style="margin-top: 5px; font-size: 13px;color: #404040;">{{item.description}}</div>
-                </el-col>
-                <el-col :span="5">
-                  <div style="height: 30px"></div>
-                  <div style="color: #8d8a8a">{{item.time}}</div>
-                </el-col>
-              </el-row>
-            </div>
-          <div style="text-align: right;">
-            <div class="pagination">
-              <el-pagination
-                  background
-                  @current-change="handleActivityCurrentChange"
-                  :current-page="ActivityPageNum"
-                  :page-size="ActivityPageSize"
-                  layout="prev,next"
-                  :total="ActivityTotal">
-              </el-pagination>
-            </div>
-          </div>
-          </el-col>
-          <el-col :span="12">
-            <div style="margin: 20px 0 20px 0; width: 130px; background-color: #f16f44; height: 30px; line-height: 30px; text-align: center; font-size: 18px; color: white; font-weight: bold; border-radius: 20px">资讯</div>
-            <div v-for="item in informationData">
-              <el-row :gutter="20" style="margin-bottom: 10px">
-                <el-col :span="18">
-                  <div style="font-weight: 550;font-size:15px;color: #404040;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
-                    <a href="#" @click="navTo('/front/informationDetail?id='+item.id)">{{item.name}}</a>
-                  </div>
-                </el-col>
-                <el-col :span="6">
-
-                  <div style="color: #8d8a8a">{{item.time}}</div>
-                </el-col>
-              </el-row>
-            </div>
-            <div style="text-align: right;">
-              <div class="pagination">
-                <el-pagination
-                    background
-                    @current-change="handleInformationCurrentChange"
-                    :current-page="InformationPageNum"
-                    :page-size="InformationPageSize"
-                    layout="prev,next"
-                    :total="InformationTotal">
-                </el-pagination>
-              </div>
-            </div>
-          </el-col>
-        </el-row>
-
-      </div>
-
       <div>
         <div style="margin: 20px 0 0 0; width: 130px; background-color: #f16f44; height: 30px; line-height: 30px; text-align: center; font-size: 18px; color: white; font-weight: bold; border-radius: 20px">优秀社团</div>
         <div style="margin-top: 15px">
@@ -84,6 +17,7 @@
           </el-row>
         </div>
       </div>
+
     </div>
 
   </div>

@@ -29,7 +29,8 @@ const routes = [
       { path: 'member', name: 'Member', meta: { name: '社团成员' }, component: () => import('../views/manager/Member') },
       { path: 'activity', name: 'Activity', meta: { name: '活动' }, component: () => import('../views/manager/Activity.vue') },
       { path: 'information', name: 'Information', meta: { name: '资讯' }, component: () => import('../views/manager/Information') },
-      { path: 'comment', name: 'Comment', meta: { name: '评论' }, component: () => import('../views/manager/Comment') },
+      { path: 'departmentComment', name: 'DepartmentComment', meta: { name: '组织评论' }, component: () => import('../views/manager/DepartmentComment.vue') },
+      { path: 'comment', name: 'Comment', meta: { name: '文章&活动评论' }, component: () => import('../views/manager/Comment.vue') },
     ]
   },
   {

@@ -1,8 +1,8 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.entity.DepartmentComment;
-import com.example.service.DepartmentCommentService;
+import com.example.entity.Comment;
+import com.example.service.CommentService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,21 +10,21 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 评论信息表前端操作接口
+ * 前端操作接口
  **/
 @RestController
-@RequestMapping("/departmentComment")
-public class DepartmentCommentController {
+@RequestMapping("/comment")
+public class CommentController {
 
     @Resource
-    private DepartmentCommentService departmentCommentService;
+    private CommentService commentService;
 
     /**
      * 新增
      */
     @PostMapping("/add")
-    public Result add(@RequestBody DepartmentComment departmentComment) {
-        departmentCommentService.add(departmentComment);
+    public Result add(@RequestBody Comment comment) {
+        commentService.add(comment);
         return Result.success();
     }
 
@@ -33,7 +33,7 @@ public class DepartmentCommentController {
      */
     @DeleteMapping("/delete/{id}")
     public Result deleteById(@PathVariable Integer id) {
-        departmentCommentService.deleteById(id);
+        commentService.deleteById(id);
         return Result.success();
     }
 
@@ -42,7 +42,7 @@ public class DepartmentCommentController {
      */
     @DeleteMapping("/delete/batch")
     public Result deleteBatch(@RequestBody List<Integer> ids) {
-        departmentCommentService.deleteBatch(ids);
+        commentService.deleteBatch(ids);
         return Result.success();
     }
 
@@ -50,8 +50,8 @@ public class DepartmentCommentController {
      * 修改
      */
     @PutMapping("/update")
-    public Result updateById(@RequestBody DepartmentComment departmentComment) {
-        departmentCommentService.updateById(departmentComment);
+    public Result updateById(@RequestBody Comment comment) {
+        commentService.updateById(comment);
         return Result.success();
     }
 
@@ -60,16 +60,22 @@ public class DepartmentCommentController {
      */
     @GetMapping("/selectById/{id}")
     public Result selectById(@PathVariable Integer id) {
-        DepartmentComment departmentComment = departmentCommentService.selectById(id);
-        return Result.success(departmentComment);
+        Comment comment = commentService.selectById(id);
+        return Result.success(comment);
     }
 
     /**
      * 查询所有
      */
     @GetMapping("/selectAll")
-    public Result selectAll(DepartmentComment departmentComment) {
-        List<DepartmentComment> list = departmentCommentService.selectAll(departmentComment);
+    public Result selectAll(Comment comment) {
+        List<Comment> list = commentService.selectAll(comment);
+        return Result.success(list);
+    }
+
+    @GetMapping("/selectForUser")
+    public Result selectForUser(Comment comment) {
+        List<Comment> list = commentService.selectForUser(comment);
         return Result.success(list);
     }
 
@@ -77,11 +83,17 @@ public class DepartmentCommentController {
      * 分页查询
      */
     @GetMapping("/selectPage")
-    public Result selectPage(DepartmentComment departmentComment,
+    public Result selectPage(Comment comment,
                              @RequestParam(defaultValue = "1") Integer pageNum,
                              @RequestParam(defaultValue = "10") Integer pageSize) {
-        PageInfo<DepartmentComment> page = departmentCommentService.selectPage(departmentComment, pageNum, pageSize);
+        PageInfo<Comment> page = commentService.selectPage(comment, pageNum, pageSize);
         return Result.success(page);
+    }
+
+    @GetMapping("/selectCount")
+    public Result selectCount(@RequestParam Integer fid, @RequestParam String module) {
+        Integer count = commentService.selectCount(fid, module);
+        return Result.success(count);
     }
 
 }

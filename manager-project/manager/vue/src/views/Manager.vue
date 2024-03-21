@@ -55,6 +55,7 @@
             <el-menu-item index="/activity">活动</el-menu-item>
             <el-menu-item index="/information">咨询</el-menu-item>
             <el-menu-item index="/departmentComment">社团评论</el-menu-item>
+            <el-menu-item index="/comment">文章&活动评论</el-menu-item>
           </el-submenu>
 
           <el-submenu v-if="user.role==='ADMIN'" index="user">
