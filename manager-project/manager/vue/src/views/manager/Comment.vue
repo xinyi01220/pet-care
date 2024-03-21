@@ -19,7 +19,7 @@
         <el-table-column prop="userName" label="评论人"></el-table-column>
         <el-table-column prop="pid" label="父级ID"></el-table-column>
         <el-table-column prop="rootId" label="根节点ID"></el-table-column>
-        <el-table-column prop="time" label="评论时间"></el-table-column>
+        <el-table-column  prop="time" label="评论时间" width="150"></el-table-column>
         <el-table-column prop="fid" label="关联ID"></el-table-column>
         <el-table-column prop="module" label="模块"></el-table-column>
         <el-table-column label="操作" align="center" width="180">
