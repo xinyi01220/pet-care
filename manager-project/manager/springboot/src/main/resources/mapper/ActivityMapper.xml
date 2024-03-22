@@ -69,15 +69,15 @@
     <select id="selectComment" resultType="com.example.entity.Activity">
         select
         activity.*
-        from departmentComment
+        from comment
         left join activity
-        on departmentComment.fid = activity.id
+        on comment.fid = activity.id
         <where>
-            and departmentComment.module = '活动'
+            and comment.module = '活动'
             <if test="name != null"> and activity.name like concat('%', #{name}, '%')</if>
-            <if test="userId != null">  and departmentComment.user_id = #{userId}</if>
+            <if test="userId != null">  and comment.user_id = #{userId}</if>
         </where>
-        group by departmentComment.fid , departmentComment.module
+        group by comment.fid , comment.module
         order by id desc
     </select>
 

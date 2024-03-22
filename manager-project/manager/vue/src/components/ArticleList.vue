@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="card" style="min-height: 80vh">
-      <div class="blog-box" v-for="item in tableData" :key="item.id" v-if="total > 0">
+      <div class="article-box" v-for="item in tableData" :key="item.id" v-if="total > 0">
         <div style="flex: 1; width: 0">
-          <a :href="'/front/articleDetail?blogId=' + item.id" target="_blank"><div class="blog-title">{{ item.title }}</div></a>
-          <div class="line1" style="color: #666; margin-bottom: 10px; font-size: 13px">{{ item.descr }}</div>
+          <a :href="'/front/articleDetail?articleId=' + item.id" target="_blank"><div class="article-title">{{ item.title }}</div></a>
+          <div class="line1" style="color: #666; margin-bottom: 10px; font-size: 13px">{{ item.description }}</div>
           <div style="display: flex; align-items: center">
             <div style="flex: 1; font-size: 13px">
               <span style="color: #666; margin-right: 20px"><i class="el-icon-user"></i> {{ item.userName }}</span>
@@ -12,7 +12,7 @@
               <span style="color: #666"><i class="el-icon-like"></i> {{ item.likesCount }}</span>
 
               <span v-if="showOpt" style="margin-left: 40px; color: red; cursor: pointer" @click="del(item.id)"><i class="el-icon-delete"></i>删除</span>
-              <span v-if="showOpt" style="margin-left: 10px; color: #2a60c9; cursor: pointer" @click="editBlog(item.id)"><i class="el-icon-edit"></i>编辑</span>
+              <span v-if="showOpt" style="margin-left: 10px; color: #2a60c9; cursor: pointer" @click="editArticle(item.id)"><i class="el-icon-edit"></i>编辑</span>
             </div>
             <div style="width: fit-content">
               <el-tag v-for="(item, index) in JSON.parse(item.tags || '[]')" :key="index" type="primary" style="margin-right:5px">{{ item }}</el-tag>
@@ -57,22 +57,22 @@ export default {
   },
   watch: {  // 监听数据变化  加载最新数据
     categoryName() {
-      this.loadBlogs(1)
+      this.loadArticles(1)
     }
   },
   created() {
-    this.loadBlogs(1)
+    this.loadArticles(1)
   },
   methods: {
-    editBlog(blogId) {
-      window.open('/front/newBlog?blogId=' + blogId)
+    editArticle(articleId) {
+      window.open('/front/newArticle?articleId=' + articleId)
     },
     del(id) {   // 单个删除
       this.$confirm('您确定删除吗？', '确认删除', {type: "warning"}).then(response => {
         this.$request.delete('/article/delete/' + id).then(res => {
           if (res.code === '200') {   // 表示操作成功
             this.$message.success('操作成功')
-            this.loadBlogs(1)
+            this.loadArticles(1)
           } else {
             this.$message.error(res.msg)  // 弹出错误的信息
           }
@@ -80,7 +80,7 @@ export default {
       }).catch(() => {
       })
     },
-    loadBlogs(pageNum) {
+    loadArticles(pageNum) {
       if (pageNum) this.pageNum = pageNum
       let url
       switch (this.type) {
@@ -94,7 +94,7 @@ export default {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
-          categoryName: this.categoryName === '全部博客' ? null : this.categoryName,
+          categoryName: this.categoryName === '全部文章' ? null : this.categoryName,
           title: this.$route.query.title
         }
       }).then(res => {
@@ -110,22 +110,22 @@ export default {
 </script>
 
 <style scoped>
-.blog-box {
+.article-box {
   display: flex;
   grid-gap: 15px;
   padding: 10px 0;
   border-bottom: 1px solid #ddd;
 }
-.blog-box:first-child {
+.article-box:first-child {
   padding-top: 0;
 }
-.blog-title {
+.article-title {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 10px;
   cursor: pointer;
 }
-.blog-title:hover {
+.article-title:hover {
   color: #2a60c9;
 }
 </style>

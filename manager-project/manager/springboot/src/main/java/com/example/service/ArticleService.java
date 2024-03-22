@@ -85,10 +85,10 @@ public class ArticleService {
         int userCollectCount = 0;
         for (Article b : userArticleList) {
             Integer fid = b.getId();
-            int likesCount = likesService.selectByFidAndModule(fid, LikesModuleEnum.BLOG.getValue());
+            int likesCount = likesService.selectByFidAndModule(fid, LikesModuleEnum.ARTICLE.getValue());
             userLikesCount += likesCount;
 
-            int collectCount = collectService.selectByFidAndModule(fid, LikesModuleEnum.BLOG.getValue());
+            int collectCount = collectService.selectByFidAndModule(fid, LikesModuleEnum.ARTICLE.getValue());
             userCollectCount += collectCount;
         }
         user.setLikesCount(userLikesCount);
@@ -96,16 +96,16 @@ public class ArticleService {
 
 
         article.setUser(user);  // 设置作者信息
-        // 查询当前博客的点赞数据
-        int likesCount = likesService.selectByFidAndModule(id, LikesModuleEnum.BLOG.getValue());
+        // 查询当前文章的点赞数据
+        int likesCount = likesService.selectByFidAndModule(id, LikesModuleEnum.ARTICLE.getValue());
         article.setLikesCount(likesCount);
-        Likes userLikes = likesService.selectUserLikes(id, LikesModuleEnum.BLOG.getValue());
+        Likes userLikes = likesService.selectUserLikes(id, LikesModuleEnum.ARTICLE.getValue());
         article.setUserLike(userLikes != null);
 
-        // 查询当前博客的收藏数据
-        int collectCount = collectService.selectByFidAndModule(id, LikesModuleEnum.BLOG.getValue());
+        // 查询当文章的收藏数据
+        int collectCount = collectService.selectByFidAndModule(id, LikesModuleEnum.ARTICLE.getValue());
         article.setCollectCount(collectCount);
-        Collect userCollect = collectService.selectUserCollect(id, LikesModuleEnum.BLOG.getValue());
+        Collect userCollect = collectService.selectUserCollect(id, LikesModuleEnum.ARTICLE.getValue());
         article.setUserCollect(userCollect != null);
 
         return article;
@@ -125,7 +125,7 @@ public class ArticleService {
         PageHelper.startPage(pageNum, pageSize);
         List<Article> list = articleMapper.selectAll(article);
         for (Article b : list) {
-            int likesCount = likesService.selectByFidAndModule(b.getId(), LikesModuleEnum.BLOG.getValue());
+            int likesCount = likesService.selectByFidAndModule(b.getId(), LikesModuleEnum.ARTICLE.getValue());
             b.setLikesCount(likesCount);
         }
         return PageInfo.of(list);
@@ -156,7 +156,7 @@ public class ArticleService {
         }
         articleSet = articleSet.stream().limit(5).collect(Collectors.toSet());
         articleSet.forEach(b -> {
-            int likesCount = likesService.selectByFidAndModule(b.getId(), LikesModuleEnum.BLOG.getValue());
+            int likesCount = likesService.selectByFidAndModule(b.getId(), LikesModuleEnum.ARTICLE.getValue());
             b.setLikesCount(likesCount);
         });
         return articleSet;
@@ -185,7 +185,7 @@ public class ArticleService {
         PageInfo<Article> pageInfo = PageInfo.of(list);
         List<Article> articleList = pageInfo.getList();
         for (Article b : articleList) {
-            int likesCount = likesService.selectByFidAndModule(b.getId(), LikesModuleEnum.BLOG.getValue());
+            int likesCount = likesService.selectByFidAndModule(b.getId(), LikesModuleEnum.ARTICLE.getValue());
             b.setLikesCount(likesCount);
         }
         return pageInfo;
@@ -201,7 +201,7 @@ public class ArticleService {
         PageInfo<Article> pageInfo = PageInfo.of(list);
         List<Article> articleList = pageInfo.getList();
         for (Article b : articleList) {
-            int likesCount = likesService.selectByFidAndModule(b.getId(), LikesModuleEnum.BLOG.getValue());
+            int likesCount = likesService.selectByFidAndModule(b.getId(), LikesModuleEnum.ARTICLE.getValue());
             b.setLikesCount(likesCount);
         }
         return pageInfo;
@@ -217,7 +217,7 @@ public class ArticleService {
         PageInfo<Article> pageInfo = PageInfo.of(list);
         List<Article> articleList = pageInfo.getList();
         for (Article b : articleList) {
-            int likesCount = likesService.selectByFidAndModule(b.getId(), LikesModuleEnum.BLOG.getValue());
+            int likesCount = likesService.selectByFidAndModule(b.getId(), LikesModuleEnum.ARTICLE.getValue());
             b.setLikesCount(likesCount);
         }
         return pageInfo;

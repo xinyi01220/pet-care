@@ -208,5 +208,19 @@ public class ActivityService {
         }
         return pageInfo;
     }
+    public PageInfo<Activity> selectComment(Activity activity, Integer pageNum, Integer pageSize) {
+        Account currentUser = TokenUtils.getCurrentUser();
+        if (RoleEnum.USER.name().equals(currentUser.getRole())) {
+            activity.setUserId(currentUser.getId());
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        List<Activity> list = activityMapper.selectComment(activity);
+        PageInfo<Activity> pageInfo = PageInfo.of(list);
+        List<Activity> activityList = pageInfo.getList();
+        for (Activity act : activityList) {
+            this.setAct(act, currentUser);
+        }
+        return pageInfo;
+    }
 
 }

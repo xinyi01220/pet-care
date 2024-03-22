@@ -17,6 +17,10 @@
           </el-menu>
         </div>
       </div>
+      <div>
+        <el-input style="width: 260px; margin-right: 10px" placeholder="请输入关键字搜索" v-model="title" clearable></el-input>
+        <el-button type="success" @click="goSearch">搜 索</el-button>
+      </div>
       <div class="front-header-right">
         <div v-if="!user.username">
           <el-button @click="$router.push('/login')">登录</el-button>
@@ -87,6 +91,9 @@ export default {
     logout() {
       localStorage.removeItem("xm-user");
       this.$router.push("/login");
+    },
+    goSearch() {
+      location.href = '/front/search?title=' + this.title
     },
   }
 

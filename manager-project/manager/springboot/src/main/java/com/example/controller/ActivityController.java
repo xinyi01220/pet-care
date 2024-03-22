@@ -129,6 +129,16 @@ public class ActivityController {
         return Result.success(page);
     }
     /**
+     * 查询用户评论的活动列表
+     */
+    @GetMapping("/selectComment")
+    public Result selectComment(Activity activity,
+                                @RequestParam(defaultValue = "1") Integer pageNum,
+                                @RequestParam(defaultValue = "10") Integer pageSize) {
+        PageInfo<Activity> page = activityService.selectComment(activity, pageNum, pageSize);
+        return Result.success(page);
+    }
+    /**
      * 热门活动
      */
     @GetMapping("/selectTop")

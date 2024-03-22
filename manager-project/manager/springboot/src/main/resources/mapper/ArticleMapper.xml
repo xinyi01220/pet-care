@@ -46,7 +46,7 @@
         left join user
         on article.user_id = user.id
         <where>
-            and likes.module = '博客'
+            and likes.module = '文章'
             <if test="title != null">and article.title like concat('%', #{title}, '%')</if>
             <if test="categoryName != null">and category.name like concat('%', #{categoryName}, '%')</if>
             <if test="userName != null">and user.name like concat('%', #{userName}, '%')</if>
@@ -65,7 +65,7 @@
         left join user
         on article.user_id = user.id
         <where>
-            and collect.module = '博客'
+            and collect.module = '文章'
             <if test="title != null">and article.title like concat('%', #{title}, '%')</if>
             <if test="categoryName != null">and category.name like concat('%', #{categoryName}, '%')</if>
             <if test="userName != null">and user.name like concat('%', #{userName}, '%')</if>
@@ -84,7 +84,7 @@
         left join user
         on article.user_id = user.id
         <where>
-            and comment.module = '博客'
+            and comment.module = '文章'
             <if test="title != null">and article.title like concat('%', #{title}, '%')</if>
             <if test="categoryName != null">and category.name like concat('%', #{categoryName}, '%')</if>
             <if test="userName != null">and user.name like concat('%', #{userName}, '%')</if>

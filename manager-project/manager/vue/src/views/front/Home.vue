@@ -45,7 +45,7 @@
         </div>
         <div>
           <div v-for="item in showList" :key="item.id" style="margin: 15px 0" class="line1">
-            <a :href="'/front/blogDetail?blogId=' + item.id" target="_blank">
+            <a :href="'/front/articleDetail?articleId=' + item.id" target="_blank">
                 <span style="width: 18px; display: inline-block; text-align: right; margin-right: 10px">
                   <span style="color: orangered" v-if="item.index === 1">{{ item.index }}</span>
                   <span style="color: goldenrod" v-else-if="item.index === 2">{{ item.index }}</span>
@@ -103,7 +103,7 @@ export default {
       InformationPageSize: 3,
       InformationTotal: 0,
 
-      current: '全部博客',  //当前选中的分类名称
+      current: '全部文章',  //当前选中的分类名称
       categoryList: [],
 
       topList: [],
@@ -157,7 +157,7 @@ export default {
       // 请求分类的数据
       this.$request.get('/category/selectAll').then(res => {
         this.categoryList = res.data || []
-        this.categoryList.unshift({ name: '全部博客' })
+        this.categoryList.unshift({ name: '全部文章' })
       })
     },
     refreshTop() {
