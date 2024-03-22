@@ -56,7 +56,8 @@ export default {
     return {
       activity: {},
       activityId: this.$route.query.activityId,
-      signText: '已报名'
+      signText: '已报名',
+      departmentId:null,
     }
   },
   created() {
@@ -99,7 +100,7 @@ export default {
       })
     },
     sign() {
-      this.$request.post('/activitySign/add', { activityId: this.activityId }).then(res => {
+      this.$request.post('/activitySign/add', { activityId: this.activityId,departmentId:this.departmentId }).then(res => {
         if (res.code === '200') {
           this.$message.success('报名成功')
           this.load()
@@ -111,6 +112,7 @@ export default {
     load() {
       this.$request.get('/activity/selectById/' + this.activityId).then(res => {
         this.activity = res.data || {}
+        this.departmentId= this.activity.departmentId
       })
     }
   }

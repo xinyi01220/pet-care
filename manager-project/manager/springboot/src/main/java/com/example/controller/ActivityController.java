@@ -37,14 +37,14 @@ public class ActivityController {
         return Result.success();
     }
 
-    /**
-     * 批量删除
-     */
-    @DeleteMapping("/delete/batch")
-    public Result deleteBatch(@RequestBody List<Integer> ids) {
-        activityService.deleteBatch(ids);
-        return Result.success();
-    }
+//    /**
+//     * 批量删除
+//     */
+//    @DeleteMapping("/delete/batch")
+//    public Result deleteBatch(@RequestBody List<Integer> ids) {
+//        activityService.deleteBatch(ids);
+//        return Result.success();
+//    }
 
     /**
      * 修改

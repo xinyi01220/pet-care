@@ -33,12 +33,6 @@ public class ActivitySignService {
         }
         activitySign.setUserId(currentUser.getId());
         activitySign.setTime(DateUtil.now());
-
-        Department department= departmentMapper.selectByUserId(currentUser.getId());
-        if (ObjectUtil.isNotNull(department)) {
-            activitySign.setDepartmentId(department.getId());
-        }
-
         activitySignMapper.insert(activitySign);
     }
 
@@ -56,13 +50,6 @@ public class ActivitySignService {
         }
         PageHelper.startPage(pageNum, pageSize);
         List<ActivitySign> list = activitySignMapper.selectAll(activitySign);
-        System.out.println(list);
-        for (ActivitySign temp:list){
-            if(ObjectUtil.isNotEmpty(temp.getDepartmentId())){
-                Department dbDepartment=departmentMapper.selectById(temp.getDepartmentId());
-                temp.setDepartmentName(dbDepartment.getName());
-            }
-        }
         return PageInfo.of(list);
     }
 

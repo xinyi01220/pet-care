@@ -10,6 +10,7 @@ import com.example.common.enums.RoleEnum;
 import com.example.entity.*;
 import com.example.exception.CustomException;
 import com.example.mapper.ActivityMapper;
+import com.example.mapper.ActivitySignMapper;
 import com.example.mapper.DepartmentMapper;
 import com.example.mapper.UserMapper;
 import com.example.utils.TokenUtils;
@@ -40,6 +41,8 @@ public class ActivityService {
 
     @Resource
     CollectService collectService;
+    @Resource
+    ActivitySignMapper activitySignMapper;
 
     /**
      * 新增
@@ -57,6 +60,14 @@ public class ActivityService {
      * 删除
      */
     public void deleteById(Integer id) {
+        //先查出该活动的所有活动报名信息
+        ActivitySign activitySign=new ActivitySign();
+        activitySign.setActivityId(id);
+        List<ActivitySign> signList= activitySignMapper.selectAll(activitySign);
+        for (ActivitySign temp:signList){
+            System.out.println(temp);
+           activitySignMapper.deleteById(temp.getActivityId());
+        }
         activityMapper.deleteById(id);
     }
 
@@ -65,7 +76,13 @@ public class ActivityService {
      */
     public void deleteBatch(List<Integer> ids) {
         for (Integer id : ids) {
-            activityMapper.deleteById(id);
+            //先查出该活动的所有活动报名信息
+            ActivitySign activitySign=new ActivitySign();
+            activitySign.setActivityId(id);
+            List<ActivitySign> signList= activitySignMapper.selectAll(activitySign);
+            for (ActivitySign temp:signList){
+                activitySignMapper.deleteById(temp.getId());
+            }
         }
     }
 
@@ -161,7 +178,9 @@ public class ActivityService {
     }
 
     public void updateReadCount(Integer activityId) {
+        System.out.println("??????????!!!!!!!!!!!!前"+activityMapper.selectById(activityId).getReadCount());
         activityMapper.updateReadCount(activityId);
+        System.out.println("??????????!!!!!!!!!!!!后"+activityMapper.selectById(activityId).getReadCount());
     }
 
     // 查询出用户报名的活动列表

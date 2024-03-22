@@ -9,7 +9,7 @@ public class ActivitySign {
     private String activityName;
     private String userName;
     private Integer departmentId;
-    private String departmentName;
+
 
     public String getActivityName() {
         return activityName;
@@ -65,13 +65,5 @@ public class ActivitySign {
 
     public void setDepartmentId(Integer departmentId) {
         this.departmentId = departmentId;
-    }
-
-    public String getDepartmentName() {
-        return departmentName;
-    }
-
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
     }
 }
